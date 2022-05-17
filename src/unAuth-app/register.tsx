@@ -1,0 +1,24 @@
+import { useAuth } from '../context/auth-context'
+import { Form  , Input , Button} from 'antd'
+export const RegisterPage =()=>{
+  const { register  } = useAuth()
+  const handleSubmit = async (value:{ username:string , password:string })=>{
+    const username = value.username
+    const password = value.password
+    await register({username , password})
+  }
+
+
+  return (
+    <Form style={{display:"flex", flexDirection:"column", alignItems:"center" ,justifyContent:"center"}} onFinish={ handleSubmit }>
+    <Form.Item name={ "username" } rules={[ {required:true , message:"请输入用户名"}]}>
+      <Input placeholder='请输入用户名...' type="text" id="username"/>
+    </Form.Item>
+    <Form.Item name={"password"} rules={[{required:true , message:"请输入密码"}]}>
+      <Input placeholder='请输入密码...' type="password" id="password"/>
+    </Form.Item>
+    <Button htmlType="submit" type="primary">登陆</Button>
+  </Form>
+  )
+}
+
