@@ -1,0 +1,8 @@
+html{
+  font-size: 62.5%; 
+  /* 10px */
+}
+
+html body #root .app{
+  min-height: 100vh;
+}
