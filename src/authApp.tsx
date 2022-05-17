@@ -1,20 +1,31 @@
 import styled from "@emotion/styled"
 import React from 'react';
-import { Button } from 'antd'
+import { Button ,Dropdown ,Menu} from 'antd'
 import { useAuth } from './context/auth-context';
 import { ProjectListScreen } from "./pages/project-list"
 import { Row } from './components/components'
+import {ReactComponent as SoftwareLogo} from './assets/software-logo.svg'
 export const AuthApp =()=>{
-  const {loginOut} = useAuth()
+  const {loginOut , user} = useAuth()
   return (
     <Container>
       <Header>
         <Row marginRight={2} > 
-          <h3> LOGO </h3>  
+          <SoftwareLogo width={"18rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
           <h3> CHERRY </h3>  
           <h3> LOVE </h3>  
         </Row>
-        <HeaderRight><Button onClick={ loginOut }>登出</Button></HeaderRight>
+        <HeaderRight>
+          <Dropdown overlay={<Menu>
+            <Menu.Item key="logout">
+            <Button onClick={ loginOut }>登出</Button> 
+            </Menu.Item>
+          </Menu>}>
+            <a onClick={e=>e.preventDefault()}>
+              Hi,{ user?.name }
+            </a>
+          </Dropdown>
+          </HeaderRight>
       </Header>
       <Nav> nav </Nav>
       <Main>
@@ -39,11 +50,10 @@ const Container = styled.div`
   grid-gap:6rem ;
 `
 
-const Header = styled.header`grid-area:header;
-display: flex;
-flex-direction: row;
-align-items:center ;
-justify-content: space-between;
+const Header = styled(Row)`
+  width: 100vw;
+  padding:3.2rem ;
+  box-shadow: 0 0 5px rgba(0 ,0,0,0.5) ;
 `
 
 const HeaderLeft = styled.div`
@@ -51,7 +61,7 @@ const HeaderLeft = styled.div`
   align-items: center;
 `
 const HeaderRight = styled.div`
-  
+  margin-right:2rem ;
 `
 
 const Main = styled.main`grid-area:main`

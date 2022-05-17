@@ -9,6 +9,7 @@ import $http from '../../api'
 
 import {clearObject} from '../../utils'
 import { useMount , useDebounce } from '../../hooks'
+import styled from '@emotion/styled'
 export const ProjectListScreen = ()=>{
    const [param,setParam] = useState<paramType>({
     name:"",
@@ -30,9 +31,14 @@ export const ProjectListScreen = ()=>{
   },[debounceParam])
 
   return (
-    <div>
+    <Container>
       <SearchPanel users={ users } param={param} setParam={setParam} ></SearchPanel>
       <List projectList={projectList} users={users}></List>
-    </div>
+    </Container>
   )
 }
+
+
+const Container = styled.div`
+  padding: 3.2rem;
+`

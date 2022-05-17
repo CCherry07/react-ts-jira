@@ -12,6 +12,7 @@ specifiers:
   '@types/react': ^18.0.9
   '@types/react-dom': ^18.0.3
   axios: ^0.27.2
+  dayjs: ^1.11.2
   jira-dev-tool: ^1.7.61
   qs: ^6.10.3
   react: ^18.1.0
@@ -33,6 +34,7 @@ dependencies:
   '@types/react': 18.0.9
   '@types/react-dom': 18.0.4
   axios: 0.27.2
+  dayjs: 1.11.2
   jira-dev-tool: 1.7.61_react-dom@18.1.0+react@18.1.0
   qs: 6.10.3
   react: 18.1.0
