@@ -2,7 +2,7 @@ import React,{ useState } from 'react';
 import { LoginPage } from '../pages/login';
 import { RegisterPage } from './register'
 
-import { Card , Button} from 'antd'
+import { Card , Button , Divider} from 'antd'
 import styled from '@emotion/styled';
 
 import logo  from '../assets/logo.svg';
@@ -12,20 +12,51 @@ export const UnauthApp =()=>{
   const [ isRegister , setRegister] = useState( false)
   return (
     <Container>
+      <Header></Header>
+      <BackGround>
       <ShadowCard>
-        <div style={{ display:"flex" ,flexDirection:"column", justifyContent:"center" ,alignItems:"center"}}>
+        <Title>
+          { isRegister?"请注册":"请登陆" }
+        </Title>
+        <div style={{ display:"flex" ,flexDirection:"column", justifyContent:"center"}}>
         { isRegister? <RegisterPage></RegisterPage> : <LoginPage></LoginPage> }
-        <Button style={{ margin:" .625rem 0"}} onClick={()=>setRegister( !isRegister ) }> 切换 { isRegister ? "登陆" : "注册" }</Button>
+        <Divider></Divider>
+        <LongButton style={{ margin:" .625rem 0"}} 
+        onClick={()=>setRegister( !isRegister ) }> 切换 { isRegister ? "登陆" : "注册" }</LongButton>
         </div>
       </ShadowCard>
+      </BackGround>
     </Container>
   )
 }
-
-const Header = styled.header`
-  background: url(${logo});
+export const LongButton = styled(Button)`
+  width:100% ;
 `
 
+const Title = styled.div`
+  margin-bottom:2.4rem;
+  color: rgb(94 , 108 ,132);
+`
+
+const Header = styled.header`
+  background: url(${logo}) no-repeat center;
+  padding:5rem 0 ;
+  background-size: 8rem;
+  width:100% ;
+`
+const BackGround = styled.div`
+  position:absolute;
+  width: 100%;
+  height:100%;
+  background-repeat:no-repeat ;
+  background-attachment: fixed;
+  background-position:left bottom,right bottom;
+  background-image: url(${left}),url(${right});
+  background-size:calc(((100vw - 40rem)/2) - 3.2rem) , calc(((100vw - 40rem)/2) - 3.2rem) , cover;
+  display: flex;
+  justify-content: center;
+  align-items:center ;
+`
 const ShadowCard = styled(Card)`
   width: 40rem;
   min-height:56rem ;

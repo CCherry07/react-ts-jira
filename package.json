@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "dependencies": {
+    "@craco/craco": "^6.4.3",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@testing-library/jest-dom": "^5.16.4",
@@ -23,7 +24,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "creaco start --development",
+    "dev": "react-scripts start --development",
     "build": "creaco build",
     "test": "creaco test",
     "eject": "react-scripts eject"
