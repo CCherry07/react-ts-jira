@@ -16,3 +16,20 @@ export const useDebounce = function<T>( value:T , delay:number):T{
   return debounceValue
 }
 
+interface State<D>{
+  error:Error|null
+  data:D | null
+  state:"idle"|"loading"|"error"|"success"
+}
+const defaultInitState:State<null> ={
+  state:"idle",
+  data:null,
+  error:null
+}
+export const useAsync = <D>(initState?:State<D>)=>{
+  const [ state , setState ] = useState<State<D>>({
+    ...defaultInitState,
+    ...initState
+  })
+
+}

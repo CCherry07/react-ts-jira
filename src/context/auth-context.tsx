@@ -30,7 +30,6 @@ const initUser =async () => {
     user = data.data.user
   }
   console.log(user);
-  
   return user
 }
 
@@ -38,7 +37,6 @@ AuthContext.displayName = "AuthContext"
 export const AuthProvider =( { children } : { children:ReactNode } )=>{
   const [user , setUser] = useState<userType|null>(null)
   const login = async (form:AuthForm ) => setUser(await auth.loginWithregister(form,"login"))
-  
   const register = async (form:AuthForm) => setUser(await auth.loginWithregister(form,"register"))
   const loginOut = ()=>{
     auth.loginOut()
