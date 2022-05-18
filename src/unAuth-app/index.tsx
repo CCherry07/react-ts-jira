@@ -2,7 +2,7 @@ import React,{ useState } from 'react';
 import { LoginPage } from '../pages/login';
 import { RegisterPage } from './register'
 
-import { Card , Button , Divider} from 'antd'
+import { Card , Button , Divider,Typography} from 'antd'
 import styled from '@emotion/styled';
 
 import logo  from '../assets/logo.svg';
@@ -10,6 +10,7 @@ import right  from '../assets/right.svg';
 import left  from '../assets/left.svg';
 export const UnauthApp =()=>{
   const [ isRegister , setRegister] = useState( false)
+  const [ error , setError ] = useState<Error|null>(null)
   return (
     <Container>
       <Header></Header>
@@ -18,8 +19,10 @@ export const UnauthApp =()=>{
         <Title>
           { isRegister?"请注册":"请登陆" }
         </Title>
+        <Typography.Text type='danger'>{error?.message}</Typography.Text>
         <div style={{ display:"flex" ,flexDirection:"column", justifyContent:"center"}}>
-        { isRegister? <RegisterPage></RegisterPage> : <LoginPage></LoginPage> }
+        { isRegister? <RegisterPage onError={setError}></RegisterPage> 
+        : <LoginPage onError={setError}></LoginPage> }
         <Divider></Divider>
         <LongButton style={{ margin:" .625rem 0"}} 
         onClick={()=>setRegister( !isRegister ) }> 切换 { isRegister ? "登陆" : "注册" }</LongButton>

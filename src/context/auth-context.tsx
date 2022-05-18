@@ -29,7 +29,6 @@ const initUser =async () => {
     const data = await $http.get("me" , date as AxiosRequestConfig<any>)
     user = data.data.user
   }
-  console.log(user);
   return user
 }
 
