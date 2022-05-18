@@ -1,7 +1,13 @@
 import {projectType , userType} from './type'
 import { Table} from 'antd'
 import dayjs from 'dayjs'
-export const  List =({projectList,users}:{ projectList:projectType[] , users:userType[]}) =>{
+
+import {TableProps } from 'antd/es/table'
+
+interface ListProps extends TableProps<projectType>  {
+  users:userType[]
+}
+export const  List =({ users , ...props }:ListProps) =>{
   return (<Table pagination={ false } columns={
     [{title:"名称",dataIndex:"name",sorter:(a,b)=>a.name.localeCompare(b.name)},{ title:"部门",dataIndex:"organization" },{
     title:"负责人",
@@ -18,6 +24,6 @@ export const  List =({projectList,users}:{ projectList:projectType[] , users:use
         { project.created ? dayjs(project.created).format("YYYY-DD-mm"):null}
       </span>
     )
-  } }]} dataSource={projectList}>
+  }}]} {...props}>
   </Table>)
 }
