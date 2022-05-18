@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
-
+import qs from "qs"
+import $http from "../api"
+import {clearObject} from '../utils'
 export const useMount =(cb:()=>void)=>{
   useEffect(()=>{
     cb()
@@ -67,4 +69,20 @@ export const useAsync = <D>(initState?:State<D>)=>{
     setError,
     ...state
   }
+}
+
+
+
+interface useDataParamType{
+  remainingUrl:string,
+  param?:{ [key: string]: any;}
+}
+
+export const useData = <T>(param:useDataParamType)=>{
+  const { run ,...result} = useAsync<T>()
+  useEffect(()=>{
+    run($http( {url:`${param.remainingUrl}?${qs.stringify(clearObject(param.param || {}))}`})
+    .then(res=>res.data))
+   },[param])
+   return result
 }
