@@ -4,8 +4,9 @@ import { useState } from "react"
 import { userType } from "../pages/project-list/type"
 import * as auth from '../api/auth'
 import $http from "../api";
-import { useMount } from "../hooks";
+import { useAsync, useMount } from "../hooks";
 import { AxiosRequestConfig } from "axios";
+import { PullpageError, PullpageLoading } from "../components/components";
 interface AuthForm {
   username:string,
   password:string
@@ -34,7 +35,8 @@ const initUser =async () => {
 
 AuthContext.displayName = "AuthContext"
 export const AuthProvider =( { children } : { children:ReactNode } )=>{
-  const [user , setUser] = useState<userType|null>(null)
+  const { data:user , setData:setUser , run ,isError,isIdle ,isLoading ,error }  = useAsync<userType|null>()
+  // const [user , setUser] = useState<userType|null>(null)
   const login = async (form:AuthForm ) => setUser(await auth.loginWithregister(form,"login"))
   const register = async (form:AuthForm) => setUser(await auth.loginWithregister(form,"register"))
   const loginOut = ()=>{
@@ -42,8 +44,14 @@ export const AuthProvider =( { children } : { children:ReactNode } )=>{
     setUser(null)
   }
   useMount(()=>{
-    initUser().then(setUser)
+    run(initUser())
   })
+  if (isIdle||isLoading) {
+    return <PullpageLoading></PullpageLoading>
+  }
+  if (isError) {
+    return <PullpageError error={error}></PullpageError>
+  }
   return <AuthContext.Provider  value={{user, login,loginOut , register}}  children={ children } ></AuthContext.Provider>
 }
 export  const  useAuth = ()=>{

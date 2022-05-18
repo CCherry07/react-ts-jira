@@ -29,7 +29,14 @@ const defaultInitState:State<null> ={
   data:null,
   error:null
 }
-export const useAsync = <D>(initState?:State<D>)=>{
+
+const defaultConfig = {
+  processErrorBySelf:false
+}
+
+// processErrorBySelf
+export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig)=>{
+  const config = {...defaultConfig , ...initConfig }
   const [ state , setState ] = useState<State<D>>({
     ...defaultInitState,
     ...initState
@@ -57,7 +64,8 @@ export const useAsync = <D>(initState?:State<D>)=>{
       return data
     },(error=>{
       setError(error)
-      return Promise.reject(error)
+      if (config.processErrorBySelf) return Promise.reject(error)
+      return error
     }))
   }
   return {

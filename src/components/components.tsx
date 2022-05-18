@@ -1,3 +1,5 @@
+
+import { Spin , Typography } from 'antd';
 import styled from "@emotion/styled";
 type flexDirection = "row"|"row-reverse"|"column"|"column-reverse"
 type justifyContent = "center" | "space-around"|"space-between"|"space-evenly"
@@ -20,3 +22,22 @@ export const Row = styled.div<propsType>`
     margin-bottom: ${(props)=>props.marginBottom?props.marginBottom + "rem":0};
   }
 `
+
+const PullPage = styled.div`
+  height:100vh ;
+  display: flex;
+  justify-content:center ;
+  align-items:center ;
+`
+
+export const PullpageLoading = ()=>(
+  <PullPage>
+    <Spin size='large'></Spin>
+  </PullPage>
+)
+
+export const PullpageError=({error}:{error:Error | null})=>(
+  <PullPage>
+    <Typography.Text type='danger'>{error?.message}</Typography.Text>
+  </PullPage>
+)

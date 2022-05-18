@@ -7,7 +7,7 @@ const $http = Axios.create({
 })
 $http.interceptors.request.use((config)=>{
   const token = getToken()
-  if (config.headers) {
+  if (config.headers && !config.url?.includes("register")) {
     config.headers.Authorization = token ? `Bearer ${ token}` : ""
   }
   return config
