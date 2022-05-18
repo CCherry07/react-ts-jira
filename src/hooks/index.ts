@@ -75,14 +75,14 @@ export const useAsync = <D>(initState?:State<D>)=>{
 
 interface useDataParamType{
   remainingUrl:string,
-  param?:{ [key: string]: any;}
+  queryOptions?:{ [key: string]: any;}
 }
 
-export const useData = <T>(param:useDataParamType)=>{
+export const useData = <T>(parameter:useDataParamType)=>{
   const { run ,...result} = useAsync<T>()
   useEffect(()=>{
-    run($http( {url:`${param.remainingUrl}?${qs.stringify(clearObject(param.param || {}))}`})
+    run($http( {url:`${parameter.remainingUrl}?${qs.stringify(clearObject(parameter.queryOptions || {}))}`})
     .then(res=>res.data))
-   },[param])
+   },[parameter.queryOptions])
    return result
 }
