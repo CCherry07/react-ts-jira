@@ -57,7 +57,7 @@ export const useAsync = <D>(initState?:State<D>)=>{
       return data
     },(error=>{
       setError(error)
-      return error
+      return Promise.reject(error)
     }))
   }
   return {

@@ -4,13 +4,9 @@ import {LongButton } from '../../unAuth-app'
 import { useAsync } from '../../hooks'
 export const LoginPage =({onError}:{onError:(error:Error)=>void})=>{
   const {login } = useAuth()
-  const { run,error,isLoading } = useAsync()
+  const { run,isLoading } = useAsync()
   const handleSubmit = async (value:{ username:string , password:string })=>{
-    // login({username , password}).catch(onError)
-    run(login(value))
-    if (error) {
-      onError(error)
-    }
+    run(login(value)).catch(onError)
   }
   return (
     <Form style={{display:"flex", flexDirection:"column",justifyContent:"center"}} onFinish={ handleSubmit }>
