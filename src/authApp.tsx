@@ -1,55 +1,73 @@
 import styled from "@emotion/styled"
-import React, { useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter, Navigate, Route , Routes } from 'react-router-dom'
 import { Button ,Dropdown ,Menu} from 'antd'
+import { UnauthApp } from "./unAuth-app";
 import { useAuth } from './context/auth-context';
 import { ProjectListScreen } from "./pages/project-list"
 import { Row } from './components/components'
 import {ReactComponent as SoftwareLogo} from './assets/software-logo.svg'
 import { useDocTitle} from "./hooks";
+import { PageProject } from "./pages/project";
+import { resetRouter } from "./utils";
+
+
+
 export const AuthApp =()=>{
-  const {loginOut , user} = useAuth()
   useDocTitle("项目列表",false)
   return (
     <Container>
-      <Header>
-        <Row marginRight={2} > 
-          <SoftwareLogo width={"18rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
-          <h3> CHERRY </h3>  
-          <h3> LOVE </h3>  
-        </Row>
-        <HeaderRight>
-          <Dropdown overlay={<Menu>
-            <Menu.Item key="logout">
-            <Button onClick={ loginOut }>登出</Button> 
-            </Menu.Item>
-          </Menu>}>
-            <a onClick={e=>e.preventDefault()}>
-              Hi,{ user?.name }
-            </a>
-          </Dropdown>
-          </HeaderRight>
-      </Header>
-      <Nav> nav </Nav>
+      <PageHeader></PageHeader>
       <Main>
-        <ProjectListScreen></ProjectListScreen>
+          <BrowserRouter>
+            <Routes>
+            <Route path="/projects" element={ <ProjectListScreen/>} ></Route>
+            <Route path="/projects/:projectId/*" element={<PageProject/>}/>
+            <Route path="*" element={<Navigate to={ "/projects" } replace={true}/>} />
+            </Routes>
+          </BrowserRouter>
       </Main>
-
-      <Aside>aside</Aside>
-      <Footer>footer</Footer>
     </Container>
   )
 }
+
+const PageHeader =()=>{
+  const {loginOut , user} = useAuth()
+  return(
+    <Header>
+    <Row marginRight={2} > 
+      <Button style={{padding:0,border:"none"}} type="link" onClick={resetRouter}>
+      <SoftwareLogo width={"17rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
+      </Button>
+      <h3> CHERRY </h3>  
+      <h3> LOVE </h3>  
+    </Row>
+    <HeaderRight>
+      <Dropdown overlay={<Menu>
+        <Menu.Item key="logout">
+        <Button onClick={ loginOut }>登出</Button> 
+        </Menu.Item>
+      </Menu>}>
+        <a onClick={e=>e.preventDefault()}>
+          Hi,{ user?.name }
+        </a>
+      </Dropdown>
+      </HeaderRight>
+  </Header>
+  )
+}
+
 const Container = styled.div`
   display:grid;
   grid-template-rows: 6rem calc(100vh - 6rem) 6rem;
   grid-template-columns: 20rem 1fr 20rem;
   grid-template-areas: 
   "header header header"
-  "nav main aside"
+  "main main main"
   "footer footer footer"
   ;
   height:100vh;
-  grid-gap:6rem ;
+  /* grid-gap:3rem ; */
 `
 
 const Header = styled(Row)`
@@ -58,10 +76,6 @@ const Header = styled(Row)`
   box-shadow: 0 0 5px rgba(0 ,0,0,0.5) ;
 `
 
-const HeaderLeft = styled.div`
-  display:flex ;
-  align-items: center;
-`
 const HeaderRight = styled.div`
   margin-right:2rem ;
 `
@@ -71,9 +85,6 @@ const Aside = styled.aside`grid-area:aside`
 const Nav = styled.nav`grid-area:nav`
 const Footer = styled.footer`grid-area:footer`
 
-const PageHeader = styled.header `
-  height:6rem;
-`
 const PageMain = styled.main`
   height: calc(100vh - 6rem);
 `

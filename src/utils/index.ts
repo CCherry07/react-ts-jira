@@ -9,3 +9,7 @@ export const clearObject=(target:{ [key:string]:any })=>{
     })
     return resObj
 }
+
+export const resetRouter = ()=>{
+  window.location.href = window.location.origin
+}
