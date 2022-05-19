@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import qs from "qs"
 import $http from "../api"
 import {clearObject} from '../utils'
@@ -82,7 +82,6 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
 }
 
 
-
 interface useDataParamType{
   remainingUrl:string,
   queryOptions?:{ [key: string]: any;}
@@ -96,7 +95,6 @@ export const useData = <T>(parameter:useDataParamType)=>{
    },[parameter.queryOptions])
    return result
 }
-
 
 export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
   //将传进来的title实用useRef 持久化，不受生命周期的影响
@@ -116,10 +114,17 @@ export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
   },[keepOnUnmount , oldTitle])
 } 
 
+type ParamType<T extends string> = {[k in T]:string|null}
 
-export const useQueryParam = (keys:string[])=>{
-  const [searchParams ] = useSearchParams()
-  return keys.reduce((prev,key:string)=>{
-    return {...prev,key:searchParams.get(key)}
-  },{})
+export const useQueryParam =<T extends string>(keys:T[])=>{
+  const [searchParams ,setSearchParams] = useSearchParams()
+  return [
+    useMemo(()=>keys.reduce((prev:ParamType<T>,key:T)=>{
+      return {...prev,[key]:searchParams.get(key)}
+    },{} as ParamType<T>),[searchParams]),
+    ( params:Partial<{[key in T]:unknown}> )=>{
+      const o = clearObject({...Object.fromEntries(searchParams) , ...params})
+      return setSearchParams(o)
+    }
+  ] as const
 }
