@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import qs from "qs"
 import $http from "../api"
 import {clearObject} from '../utils'
+import { useSearchParams } from "react-router-dom"
 
 export const useMount =(cb:()=>void)=>{
   useEffect(()=>{
@@ -114,3 +115,11 @@ export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
     }
   },[keepOnUnmount , oldTitle])
 } 
+
+
+export const useQueryParam = (keys:string[])=>{
+  const [searchParams ] = useSearchParams()
+  return keys.reduce((prev,key:string)=>{
+    return {...prev,key:searchParams.get(key)}
+  },{})
+}
