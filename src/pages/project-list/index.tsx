@@ -15,10 +15,8 @@ export const ProjectListScreen = ()=>{
   })
   //劫持param 使其停止输入 delay 后更新
   const debounceParam = useDebounce<paramType>(param , 800)
-  const [urlInfo] = useQueryParam(["name","personId"])
-  console.log(debounceParam);
-  const { data:projectList , isLoading , error } = useData<projectType[]>({ remainingUrl:"/projects", queryOptions:debounceParam})
-  const{data:users } = useData<userType[]>({ remainingUrl:"/users"})
+  const { data:projectList , isLoading } = useData<projectType[]>({ remainingUrl:"/projects", queryOptions:debounceParam})
+
 
   // console.log(isLoading);
   return (
