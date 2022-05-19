@@ -11,12 +11,12 @@ import { useData, useDebounce, useQueryParam } from '../../hooks'
 export const ProjectListScreen = ()=>{
    const [param,setParam] = useState<paramType>({
     name:"",
-    personId:''
+    personId:""
   })
   //劫持param 使其停止输入 delay 后更新
   const debounceParam = useDebounce<paramType>(param , 800)
   const { data:projectList , isLoading } = useData<projectType[]>({ remainingUrl:"/projects", queryOptions:debounceParam})
-
+  const{data:users } = useData<userType[]>({ remainingUrl:"/users"})
 
   // console.log(isLoading);
   return (

@@ -1,5 +1,5 @@
 
-import { Spin , Typography ,Select} from 'antd';
+import { Spin , Typography ,Select , Rate} from 'antd';
 // import { SelectProps} from 'antd/es/select'
 import styled from "@emotion/styled";
 import { userType } from '../pages/project-list/type';
@@ -52,20 +52,23 @@ export const PullpageError=({error}:{error:Error | null})=>(
 type SelectProps = React.ComponentProps<typeof Select>
 
 interface IdSelectType extends Omit<SelectProps,"value"|"onChange"|"defaultOptionsName"|"options">{
+  isStringId:boolean
   value:string|number|null|undefined
-  onChange:(value?:number)=>void
+  onChange:(value?:number|string)=>void
   defaultOptionsName?:string
   options:{name:string , id:number}[]
+  
 }
 
 const toNumber = ( value:unknown)=> isNaN(Number(value)) ? 0 :Number(value)
+const handleIdType = (isStringId:boolean,value:unknown)=> isStringId?String(value) : toNumber(value)
 export const IdSelect = (props:IdSelectType)=>{
-  const { value , onChange , defaultOptionsName , options ,...otherProps} = props
+  const {isStringId=false ,value , onChange , defaultOptionsName , options ,...otherProps} = props
   return (
     <Select
     {...otherProps}
-    value={toNumber(value)}
-     onChange={()=>onChange(toNumber(value)||undefined)}>
+    value={isStringId?String(value):toNumber(value)}
+     onChange={()=>onChange(handleIdType(isStringId,value)||undefined)}>
         {
           defaultOptionsName ? <Select.Option value={0} >
             {defaultOptionsName}
@@ -86,5 +89,22 @@ export const UserSelect = (props:Omit<React.ComponentProps<typeof IdSelect>,"opt
   const{data:users } = useData<userType[]>({ remainingUrl:"/users"})
   //{...{...props,options:users || []}}
   return <IdSelect options={users || []} {...props}></IdSelect>
+}
+
+
+// Pin
+interface PinPros extends React.ComponentProps<typeof Rate>{
+  checked:boolean
+  onCheckedChange?:(checked:boolean)=>void
+}
+
+export const Pin = (props:PinPros)=>{
+  const {checked , onCheckedChange,...otherProps} = props
+  return (
+    <Rate count={1} value={checked ? 1 : 0}
+      onChange={num=>onCheckedChange?.(!!num)}
+      {...otherProps}
+    /> 
+  )
 }
 

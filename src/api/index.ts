@@ -10,6 +10,7 @@ $http.interceptors.request.use((config)=>{
   if (config.headers && !config.url?.includes("register")) {
     config.headers.Authorization = token ? `Bearer ${ token}` : ""
   }
+  console.log(config.data);
   return config
 })
 $http.interceptors.response.use((response)=>{

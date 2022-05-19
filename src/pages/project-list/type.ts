@@ -15,4 +15,5 @@ export interface projectType{
   personId:number,
   organization:string,
   created:number
+  pin:boolean
 } 
