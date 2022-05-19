@@ -1,12 +1,14 @@
 import styled from "@emotion/styled"
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button ,Dropdown ,Menu} from 'antd'
 import { useAuth } from './context/auth-context';
 import { ProjectListScreen } from "./pages/project-list"
 import { Row } from './components/components'
 import {ReactComponent as SoftwareLogo} from './assets/software-logo.svg'
+import { useDocTitle} from "./hooks";
 export const AuthApp =()=>{
   const {loginOut , user} = useAuth()
+  useDocTitle("项目列表",false)
   return (
     <Container>
       <Header>

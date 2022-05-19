@@ -8,9 +8,11 @@ import styled from '@emotion/styled';
 import logo  from '../assets/logo.svg';
 import right  from '../assets/right.svg';
 import left  from '../assets/left.svg';
+import { useDocTitle } from '../hooks';
 export const UnauthApp =()=>{
   const [ isRegister , setRegister] = useState( false)
   const [ error , setError ] = useState<Error|null>(null)
+  useDocTitle("欢迎jira",false)
   return (
     <Container>
       <Header></Header>
