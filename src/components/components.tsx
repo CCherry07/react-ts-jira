@@ -1,5 +1,6 @@
 
-import { Spin , Typography } from 'antd';
+import { Spin , Typography ,Select} from 'antd';
+// import { SelectProps} from 'antd/es/select'
 import styled from "@emotion/styled";
 type flexDirection = "row"|"row-reverse"|"column"|"column-reverse"
 type justifyContent = "center" | "space-around"|"space-between"|"space-evenly"
@@ -41,3 +42,33 @@ export const PullpageError=({error}:{error:Error | null})=>(
     <Typography.Text type='danger'>{error?.message}</Typography.Text>
   </PullPage>
 )
+type SelectProps = React.ComponentProps<typeof Select>
+
+interface IdSelectType extends Omit<SelectProps,"value"|"onChange"|"defaultOptionsName"|"options">{
+  value:string|number|null|undefined
+  onChange:(value?:number)=>void
+  defaultOptionsName?:string
+  options:{name:string , id:number}[]
+}
+export const IdSelect = (props:IdSelectType)=>{
+  const { value , onChange , defaultOptionsName , options ,...otherProps} = props
+  return (
+    <Select
+    {...otherProps}
+    value={toNumber(value)}
+     onChange={()=>onChange(toNumber(value)||undefined)}>
+        {
+          defaultOptionsName ? <Select.Option value={0} >
+            {defaultOptionsName}
+          </Select.Option> :null
+        }
+        {
+          options?.map((option)=>(<Select.Option key={option.id} value={option.id} >
+            {option.name}
+          </Select.Option>)) 
+        }
+    </Select>
+  )
+}
+
+const toNumber = ( value:unknown)=> isNaN(Number(value)) ? 0 :Number(value)

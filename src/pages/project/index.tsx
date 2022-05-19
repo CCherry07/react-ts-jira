@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link ,Routes,Route ,Navigate} from 'react-router-dom'
+import { useQueryParam } from '../../hooks'
 import PageEpic from '../epic'
 import PageSignboard from '../signboard'
 export const PageProject =()=>{
@@ -10,10 +11,10 @@ export const PageProject =()=>{
         <Routes>
           <Route path='signboard' element={<PageSignboard></PageSignboard>}></Route>
           <Route path='epic' element={<PageEpic></PageEpic>}></Route>
-    
           <Route path="*" element={<Navigate to={ window.location.pathname + "/signboard" } replace={true}/>} />
-
         </Routes>
     </div>
   )
 }
+
+
