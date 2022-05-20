@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 // import {http} from "../hooks/https"
 import {clearObject} from '../utils'
 import { useSearchParams } from "react-router-dom"
-import { AxiosRequestConfig, Method } from "axios"
 import { useHttp } from "./https"
 
 export const useMount =(cb:()=>void)=>{
@@ -77,7 +76,7 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
       if (config.processErrorBySelf) return Promise.reject(error)
       return error
     }))
-  },[muntedRef,retry])
+  },[muntedRef,retry,setData,setError,state])
   return {
     isIdle:state.status ==="idle",
     isLoading:state.status ==="loading",
