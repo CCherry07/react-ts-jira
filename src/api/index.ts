@@ -17,8 +17,9 @@ $http.interceptors.response.use((response)=>{
   if (response.status === 401) {
     throw new Error("请重新登陆")
   }
+  console.log(response);
   return response
-}),(error:any)=>{
+}),(error:Error)=>{
   return Promise.reject(error)
 }
 

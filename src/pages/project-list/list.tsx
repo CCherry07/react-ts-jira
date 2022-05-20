@@ -13,14 +13,12 @@ interface ListProps extends TableProps<projectType>  {
 export const  List =({ users , ...props }:ListProps) =>{
   const { muTate ,error} = useEditProject()
   const pinProject =(id:number)=>(pin:boolean)=>muTate({id,pin})
-  console.log(error);
-  
   return (<Table pagination={ false } columns={
     [
       {
         title:<Pin checked={true} disabled={true}/>,
         render(value,project){
-          return <Pin checked={project.pin} onCheckedChange={(pin)=>pinProject(project.id)(pin)}></Pin>
+          return <Pin checked={project.pin} onCheckedChange={pin=>pinProject(project.id)(pin)}></Pin>
         }
       },
       {title:"名称",dataIndex:"name",
