@@ -55,6 +55,7 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
     status:"error",
     error
   })  
+  const muntedRef = useMuntedRef() 
 
   const run  = ( promise:Promise<D> ,runConfig?:{ retry:()=>Promise<D> } )=>{
     if (!promise || !promise.then) {
@@ -67,7 +68,9 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
     })
     setState({...state , status:"loading"})
     return promise.then(data=>{
-      setData(data)
+      if (muntedRef.current) {
+        setData(data)
+      }
       return data
     },(error=>{
       setError(error)
@@ -141,4 +144,17 @@ export const useQueryParam =<T extends string>(keys:T[])=>{
       return setSearchParams(o)
     }
   ] as const
+}
+
+
+// usemuntedRef
+export const useMuntedRef = ()=>{
+  const muntedRef = useRef(false) 
+  useEffect(()=>{
+   muntedRef.current = true
+   return ()=> {
+    muntedRef.current = false
+   }
+  })
+  return muntedRef
 }

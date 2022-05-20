@@ -12,9 +12,8 @@ import { useProjectsSearchParams } from './projectHooks'
 export const ProjectListScreen = ()=>{
   //劫持param 使其停止输入 delay 后更新
   const[param , setParam] = useProjectsSearchParams()
-  const debounceParam = useDebounce(param , 800)
   const { data:projectList , isLoading ,retry} = useData<projectType[]>(
-  { remainingUrl:"projects" ,queryOptions:debounceParam})
+  { remainingUrl:"projects" ,queryOptions:useDebounce(param , 800)})
   const{data:users } = useData<userType[]>({ remainingUrl:"users"})
   return (
     <Container>

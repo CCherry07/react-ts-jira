@@ -13,7 +13,7 @@ interface ListProps extends TableProps<projectType>  {
 }
 export const  List =({ users , reFresh, ...props }:ListProps) =>{
   const { muTate } = useEditProject()
-  const pinProject =(id:number)=> async (pin:boolean)=> await muTate({id,pin}).finally(reFresh)
+  const pinProject =(id:number)=> async (pin:boolean)=> await muTate({id,pin}).then(reFresh)
   return (<Table pagination={ false } columns={
     [
       {
