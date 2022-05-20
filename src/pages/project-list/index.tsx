@@ -13,22 +13,20 @@ export const ProjectListScreen = ()=>{
   //劫持param 使其停止输入 delay 后更新
   const[param , setParam] = useProjectsSearchParams()
   const debounceParam = useDebounce(param , 800)
-  const { data:projectList , isLoading} = useData<projectType[]>(
+  const { data:projectList , isLoading ,retry} = useData<projectType[]>(
   { remainingUrl:"projects" ,queryOptions:debounceParam})
   const{data:users } = useData<userType[]>({ remainingUrl:"users"})
   return (
     <Container>
       <h2>项目列表</h2>
       <SearchPanel users={ users|| [] } param={param} setParam={setParam} ></SearchPanel>
-      <List loading={isLoading} dataSource={projectList||[]} users={users || []}></List>
+      <List reFresh={retry} loading={isLoading} dataSource={projectList||[]} users={users || []}></List>
     </Container>
   )
 }
 
 
 // ProjectListScreen.whyDidYouRender = true
-
-
 const Container = styled.div`
   padding: 3.2rem;
 `

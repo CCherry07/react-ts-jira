@@ -9,10 +9,11 @@ import { useEditProject } from './projectHooks'
 
 interface ListProps extends TableProps<projectType>  {
   users:userType[]
+  reFresh:()=>void
 }
-export const  List =({ users, ...props }:ListProps) =>{
-  const { muTate} = useEditProject()
-  const pinProject =(id:number)=> async (pin:boolean)=> await muTate({id,pin})
+export const  List =({ users , reFresh, ...props }:ListProps) =>{
+  const { muTate } = useEditProject()
+  const pinProject =(id:number)=> async (pin:boolean)=> await muTate({id,pin}).finally(reFresh)
   return (<Table pagination={ false } columns={
     [
       {
