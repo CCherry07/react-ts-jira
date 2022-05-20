@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 // import qs from "qs"
 // import {http} from "../hooks/https"
 import {clearObject} from '../utils'
@@ -57,7 +57,7 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
   })  
   const muntedRef = useMuntedRef() 
 
-  const run  = ( promise:Promise<D> ,runConfig?:{ retry:()=>Promise<D> } )=>{
+  const run  = useCallback(( promise:Promise<D> ,runConfig?:{ retry:()=>Promise<D> } )=>{
     if (!promise || !promise.then) {
       throw new Error("please Pass In The PromiseType !");
     } 
@@ -77,7 +77,7 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
       if (config.processErrorBySelf) return Promise.reject(error)
       return error
     }))
-  }
+  },[muntedRef,retry])
   return {
     isIdle:state.status ==="idle",
     isLoading:state.status ==="loading",
@@ -102,7 +102,7 @@ export const useData = <T>(parameter:useDataParamType)=>{
   const { run  ,...result} = useAsync<T>()
   const [restData,setrestData] = useState(false)
   const http = useHttp()
-  let retry = () => http(`${parameter.remainingUrl}`,{data:queryOptions})
+  let retry = () => http(`${parameter.remainingUrl}`,{data:queryOptions,...config})
   useEffect(()=>{
     run(retry(),{retry})
    },[parameter.queryOptions])
