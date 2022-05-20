@@ -1,15 +1,16 @@
-import $http from "../../api"
-import { useAsync, useData } from "../../hooks"
-
 import { projectType } from "./type"
+import { useAsync, useQueryParam} from "../../hooks"
+import { useHttp } from "../../hooks/https";
+import { useMemo } from "react";
 
 export const useEditProject = () =>{
     const { run,...asyncResult } = useAsync()
+    const client = useHttp();
     const muTate = (params:Partial<projectType>)=>{
-        return run($http({
-          url:`/projects/${params.id}`,
-          method:"patch",
-          data:params}).then(res=>res.data))
+        console.log(params);
+        return run(client(`projects/${params.id}`,{
+          method:"PATCH",
+          data:params}))
     }
     return {
       muTate,
@@ -18,9 +19,9 @@ export const useEditProject = () =>{
 }
 export const useAddProject = () =>{
     const { run,...asyncResult } = useAsync()
+    const client = useHttp();
     const muTate = (params:Partial<projectType>)=>{
-        return run($http({
-          url:`project/${params.id}`,
+        return run(client(`project/${params.id}`,{
           method:"POST",
           data:params
         }))
@@ -30,3 +31,15 @@ export const useAddProject = () =>{
       ...asyncResult
     }
 }
+
+// 项目列表搜索的参数
+export const useProjectsSearchParams = () => {
+  const [param, setParam] = useQueryParam(["name", "personId"]);
+  return [
+    useMemo(
+      () => ({ ...param, personId: Number(param.personId) || undefined }),
+      [param]
+    ),
+    setParam,
+  ] as const;
+};

@@ -3,9 +3,8 @@ import { ReactNode } from "react";
 import { useState } from "react"
 import { userType } from "../pages/project-list/type"
 import * as auth from '../api/auth'
-import $http from "../api";
+import {http} from "../hooks/https";
 import { useAsync, useMount } from "../hooks";
-import { AxiosRequestConfig } from "axios";
 import { PullpageError, PullpageLoading } from "../components/components";
 interface AuthForm {
   username:string,
@@ -23,14 +22,13 @@ interface AuthContextValue {
 const AuthContext = React.createContext<AuthContextValue | null>(null)
 
 const initUser =async () => {
-  let user = null
   const token = auth.getToken()
-  const date = { token }
   if (token) {
-    const data = await $http.get("me" , date as AxiosRequestConfig<any>)
-    user = data.data.user
+    const {user} = await http("me" , { token } )
+    console.log(user);
+    
+    return user
   }
-  return user
 }
 
 AuthContext.displayName = "AuthContext"

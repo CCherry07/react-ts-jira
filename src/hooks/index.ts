@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import qs from "qs"
-import $http from "../api"
+// import qs from "qs"
+// import {http} from "../hooks/https"
 import {clearObject} from '../utils'
 import { useSearchParams } from "react-router-dom"
+import { AxiosRequestConfig, Method } from "axios"
+import { useHttp } from "./https"
 
 export const useMount =(cb:()=>void)=>{
   useEffect(()=>{
@@ -42,7 +44,7 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
     ...defaultInitState,
     ...initState
   })
-
+  const [ retry , setReTry ] = useState(()=>()=>{})
   const setData = (data:D) => setState({
     data,
     status:"success",
@@ -54,11 +56,15 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
     error
   })  
 
-  const run  = ( promise:Promise<D> )=>{
+  const run  = ( promise:Promise<D> ,runConfig?:{ retry:()=>Promise<D> } )=>{
     if (!promise || !promise.then) {
       throw new Error("please Pass In The PromiseType !");
-    }
-
+    } 
+    setReTry(()=>()=>{
+      if (runConfig?.retry) {
+        run(runConfig.retry(),runConfig)
+      }
+    })
     setState({...state , status:"loading"})
     return promise.then(data=>{
       setData(data)
@@ -75,6 +81,7 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
     isError:state.status ==="error",
     isSuccess:state.status ==="success",
     run,
+    retry,
     setData,
     setError,
     ...state
@@ -88,12 +95,19 @@ interface useDataParamType{
 }
 
 export const useData = <T>(parameter:useDataParamType)=>{
-  const { run ,...result} = useAsync<T>()
+  const {remainingUrl , queryOptions ,...config } = parameter
+  const { run  ,...result} = useAsync<T>()
+  const [restData,setrestData] = useState(false)
+  const http = useHttp()
+  let retry = () => http(`${parameter.remainingUrl}`,{data:queryOptions})
   useEffect(()=>{
-    run($http( {url:`${parameter.remainingUrl}?${qs.stringify(clearObject(parameter.queryOptions || {}))}`})
-    .then(res=>res.data))
+    run(retry(),{retry})
    },[parameter.queryOptions])
-   return result
+   return {
+     ...result,
+     restData,
+     setrestData
+   }
 }
 
 export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
@@ -114,15 +128,15 @@ export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
   },[keepOnUnmount , oldTitle])
 } 
 
-type ParamType<T extends string> = {[k in T]:string|null}
+type ParamType<T extends string> = {[k in T]:string}
 
 export const useQueryParam =<T extends string>(keys:T[])=>{
   const [searchParams ,setSearchParams] = useSearchParams()
   return [
     useMemo(()=>keys.reduce((prev:ParamType<T>,key:T)=>{
-      return {...prev,[key]:searchParams.get(key)}
+      return {...prev,[key]:searchParams.get(key) || ""}
     },{} as ParamType<T>),[searchParams]),
-    ( params:Partial<{[key in T]:unknown}> )=>{
+    (params:Partial<{[key in T]:unknown}> )=>{
       const o = clearObject({...Object.fromEntries(searchParams) , ...params})
       return setSearchParams(o)
     }

@@ -52,42 +52,40 @@ export const PullpageError=({error}:{error:Error | null})=>(
 type SelectProps = React.ComponentProps<typeof Select>
 
 interface IdSelectType extends Omit<SelectProps,"value"|"onChange"|"defaultOptionsName"|"options">{
-  isStringId:boolean
+
   value:string|number|null|undefined
   onChange:(value?:number|string)=>void
-  defaultOptionsName?:string
+  defaultOptionName?:string
   options:{name:string , id:number}[]
-  
 }
 
 const toNumber = ( value:unknown)=> isNaN(Number(value)) ? 0 :Number(value)
 const handleIdType = (isStringId:boolean,value:unknown)=> isStringId?String(value) : toNumber(value)
-export const IdSelect = (props:IdSelectType)=>{
-  const {isStringId=false ,value , onChange , defaultOptionsName , options ,...otherProps} = props
+export const IdSelect = (props: IdSelectType) => {
+  const { value, onChange, defaultOptionName, options, ...restProps } = props;
   return (
     <Select
-    {...otherProps}
-    value={isStringId?String(value):toNumber(value)}
-     onChange={()=>onChange(handleIdType(isStringId,value)||undefined)}>
-        {
-          defaultOptionsName ? <Select.Option value={0} >
-            {defaultOptionsName}
-          </Select.Option> :null
-        }
-        {
-          options?.map((option)=>(<Select.Option key={option.id} value={option.id} >
-            {option.name}
-          </Select.Option>)) 
-        }
+      value={options?.length ? toNumber(value) : 0}
+      onChange={(value) => onChange(toNumber(value) || undefined)}
+      {...restProps}
+    >
+      {defaultOptionName ? (
+        <Select.Option value={0}>{defaultOptionName}</Select.Option>
+      ) : null}
+      {options?.map((option) => (
+        <Select.Option key={option.id} value={option.id}>
+          {option.name}
+        </Select.Option>
+      ))}
     </Select>
-  )
-}
+  );
+};
+
 
 // UserSelect
 
 export const UserSelect = (props:Omit<React.ComponentProps<typeof IdSelect>,"options">)=>{
-  const{data:users } = useData<userType[]>({ remainingUrl:"/users"})
-  //{...{...props,options:users || []}}
+  const{data:users } = useData<userType[]>({ remainingUrl:"users"})
   return <IdSelect options={users || []} {...props}></IdSelect>
 }
 

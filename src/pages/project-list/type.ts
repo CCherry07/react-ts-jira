@@ -1,6 +1,6 @@
 export interface paramType{
-  name:string,
-  personId:string
+  name:string|undefined,
+  personId:number|undefined
 }
 
 export interface userType{
@@ -10,10 +10,10 @@ export interface userType{
 }
 
 export interface projectType{
-  id:number,
-  name:string,
-  personId:number,
-  organization:string,
-  created:number
-  pin:boolean
+  id: number;
+  name: string;
+  personId: number;
+  pin: boolean;
+  organization: string;
+  created: number;
 } 

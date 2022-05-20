@@ -1,5 +1,5 @@
+import { http } from '../../hooks/https'
 import { userType } from '../../pages/project-list/type'
-import $http from '../index'
 interface userinfo {
   username:string,
   password:string
@@ -17,8 +17,8 @@ const setToken = (token:string)=>{
 
 export const loginWithregister = async (userinfo:userinfo,type:"login" | "register" ):Promise<userType>=>{
   const url = type
-  const { user }:{ user:userType } = await (await $http.post(url,userinfo)).data
-     setToken(user.token)   
-  return $http.post(url,userinfo)
+  const {user} = await http(url,{data:userinfo,method:"POST"})
+     setToken(user.token)
+  return http(url,{data:userinfo,method:"POST"})
 }
 export const loginOut = () => window.localStorage.removeItem(localstoreKey)
