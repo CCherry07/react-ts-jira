@@ -24,7 +24,7 @@ export const AuthApp =()=>{
       <Main>
           <BrowserRouter>
             <Routes>
-            <Route path="/projects" element={ <ProjectListScreen/>} ></Route>
+            <Route path="/projects" element={ <ProjectListScreen setPageProjectModalOpen={setPageProjectModalOpen}/>} ></Route>
             <Route path="/projects/:projectId/*" element={<PageProject/>}/>
             <Route path="*" element={<Navigate to={ "/projects" } replace={true}/>} />
             </Routes>

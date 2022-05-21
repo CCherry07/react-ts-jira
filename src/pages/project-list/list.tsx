@@ -1,17 +1,19 @@
 import {projectType , userType} from './type'
-import { Table} from 'antd'
+import { Table , Dropdown , Button ,Menu} from 'antd'
 import dayjs from 'dayjs'
 
 import {TableProps } from 'antd/es/table'
 import { Link } from 'react-router-dom'
 import { Pin } from '../../components/components'
 import { useEditProject } from './projectHooks'
+import { Dispatch, SetStateAction } from 'react'
 
 interface ListProps extends TableProps<projectType>  {
   users:userType[]
   reFresh:()=>void
+  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
 }
-export const  List =({ users , reFresh, ...props }:ListProps) =>{
+export const  List =({ users , reFresh,setPageProjectModalOpen, ...props }:ListProps) =>{
   const { muTate } = useEditProject()
   const pinProject =(id:number)=> async (pin:boolean)=> await muTate({id,pin}).then(reFresh)
   return (<Table pagination={ false } columns={
@@ -45,6 +47,23 @@ export const  List =({ users , reFresh, ...props }:ListProps) =>{
         { project.created ? dayjs(project.created).format("YYYY-DD-mm"):null}
       </span>
     )
-  }}]} {...props}>
+  }},{
+    title:"Control",
+    render(value,project){
+      return (
+        <Dropdown overlay={
+          <Menu>
+            <Menu.Item key={"edit"}>
+              <Button type='link' onClick={()=>setPageProjectModalOpen(true)}>编辑</Button>
+            </Menu.Item>
+            <Menu.Item>
+            </Menu.Item>
+          </Menu>
+        }>
+          <Button type='link'>...</Button>
+        </Dropdown>
+      )
+    }
+  }]} {...props}>
   </Table>)
 }

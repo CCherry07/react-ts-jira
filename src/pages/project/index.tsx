@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link ,Routes,Route ,Navigate} from 'react-router-dom'
-import { useQueryParam } from '../../hooks'
 import PageEpic from '../epic'
 import PageSignboard from '../signboard'
 export const PageProject =()=>{
