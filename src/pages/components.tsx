@@ -1,8 +1,11 @@
-import React from 'react';
-import {Popover , Typography ,List ,Divider  ,Button} from 'antd'
+import React, { Dispatch, SetStateAction } from 'react';
+import {Popover , Typography ,List   ,Button} from 'antd'
 import { useData } from '../hooks';
 import { projectType } from './project-list/type';
-export const ProjectPopover = ()=>{
+interface ProjectPopoverProps{
+  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
+}
+export const ProjectPopover = ({setPageProjectModalOpen}:ProjectPopoverProps)=>{
   const {data:projects , isLoading} = useData<projectType[]>({remainingUrl:"projects"})
   const pinnedProjects = projects?.filter(project => project.pin)
   const content = (<div style={{width:"20rem"}}>
@@ -15,7 +18,7 @@ export const ProjectPopover = ()=>{
           </List.Item>
         ))
       }
-      <Button style={{padding:0}} type='link'> 创建项目 </Button>
+      <Button style={{padding:0}} type='link' onClick={()=>setPageProjectModalOpen(true)}> 创建项目 </Button>
     </List>
   </div>)
   return (

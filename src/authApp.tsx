@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { BrowserRouter, Navigate, Route , Routes } from 'react-router-dom'
 import { Button ,Dropdown ,Menu} from 'antd'
 import { UnauthApp } from "./unAuth-app";
@@ -20,7 +20,7 @@ export const AuthApp =()=>{
   useDocTitle("项目列表",false)
   return (
     <Container>
-      <PageHeader></PageHeader>
+      <PageHeader setPageProjectModalOpen={setPageProjectModalOpen}></PageHeader>
       <Main>
           <BrowserRouter>
             <Routes>
@@ -35,7 +35,11 @@ export const AuthApp =()=>{
   )
 }
 
-const PageHeader =()=>{
+interface PageHeaderProps{
+  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
+}
+
+const PageHeader =({setPageProjectModalOpen}:PageHeaderProps)=>{
   const {loginOut , user} = useAuth()
   return(
     <Header>
@@ -44,7 +48,7 @@ const PageHeader =()=>{
       <Button style={{padding:0,border:"none"}} type="link" onClick={resetRouter}>
       <SoftwareLogo width={"17rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
       </Button>
-      <ProjectPopover></ProjectPopover>
+      <ProjectPopover setPageProjectModalOpen={setPageProjectModalOpen}></ProjectPopover>
       <h3> CHERRY </h3>  
       <h3> LOVE </h3>  
     </Row>
