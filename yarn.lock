@@ -6008,7 +6008,7 @@ jest@^27.4.3:
     import-local "^3.0.2"
     jest-cli "^27.5.1"
 
-jira-dev-tool@^1.7.61:
+jira-dev-tool@^1.6.13, jira-dev-tool@^1.7.61:
   version "1.7.61"
   resolved "https://repo.huaweicloud.com/repository/npm/jira-dev-tool/-/jira-dev-tool-1.7.61.tgz#32477c1e0f9f9f46ad5ffd61409ac05a1422c17c"
   integrity sha512-ym9L6tQAs7Pi9XrGvoOlz0/dpYR23I2J1C0IDIk3E29YySHwYJ5KWWHZIk9dqiFSkDhfr/ae8CbZBhAbfe8EmQ==
@@ -6017,6 +6017,16 @@ jira-dev-tool@^1.7.61:
     msw "^0.24.1"
     react-query "^2.26.3"
     react-query-devtools "^2.6.3"
+
+jira-dev-tool@^1.6.59:
+  version "1.6.59"
+  resolved "https://repo.huaweicloud.com/repository/npm/jira-dev-tool/-/jira-dev-tool-1.6.59.tgz#67a98dba9fc9c976d004f3bea1b0349437a0da17"
+  integrity sha512-0LsUIP2qMSRzbnlccWeaWOxuh7zN+SHYarcT/YFQE+1mw9k6jbDNCxlxCjrpKfo/BYF8LWL6pmTSvHfDAS0kGg==
+  dependencies:
+    antd "^4.9.1"
+    jira-dev-tool "^1.6.13"
+    msw "^0.24.1"
+    react-query "^3.5.10"
 
 js-sha3@0.8.0:
   version "0.8.0"
@@ -8157,7 +8167,7 @@ react-query@^2.26.3:
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-react-query@^3.39.0:
+react-query@^3.39.0, react-query@^3.5.10:
   version "3.39.0"
   resolved "https://repo.huaweicloud.com/repository/npm/react-query/-/react-query-3.39.0.tgz#0caca7b0da98e65008bbcd4df0d25618c2100050"
   integrity sha512-Od0IkSuS79WJOhzWBx/ys0x13+7wFqgnn64vBqqAAnZ9whocVhl/y1padD5uuZ6EIkXbFbInax0qvY7zGM0thA==
