@@ -11,6 +11,7 @@ import { useDocTitle} from "./hooks";
 import { PageProject } from "./pages/project";
 import { resetRouter } from "./utils";
 import { PageProjectModal } from "./pages/project-modal";
+import { ProjectPopover } from "./pages/components";
 
 
 
@@ -19,7 +20,6 @@ export const AuthApp =()=>{
   useDocTitle("项目列表",false)
   return (
     <Container>
-          <Button onClick={()=>setPageProjectModalOpen(true)}></Button>
       <PageHeader></PageHeader>
       <Main>
           <BrowserRouter>
@@ -39,11 +39,12 @@ const PageHeader =()=>{
   const {loginOut , user} = useAuth()
   return(
     <Header>
-
     <Row marginRight={2} > 
+      {/* <Button onClick={()=>setPageProjectModalOpen(true)}></Button> */}
       <Button style={{padding:0,border:"none"}} type="link" onClick={resetRouter}>
       <SoftwareLogo width={"17rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
       </Button>
+      <ProjectPopover></ProjectPopover>
       <h3> CHERRY </h3>  
       <h3> LOVE </h3>  
     </Row>
