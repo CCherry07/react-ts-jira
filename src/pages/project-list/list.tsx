@@ -22,7 +22,7 @@ export const  List =({ users , reFresh, ...props }:ListProps) =>{
       {
         title:<Pin checked={true} disabled={true}/>,
         render(value,project){
-          return <Pin checked={project.pin} onCheckedChange={pin=>pinProject(project.id)(pin)}></Pin>
+          return <Pin key={project.id} checked={project.pin} onCheckedChange={pin=>pinProject(project.id)(pin)}></Pin>
         }
       },
       {title:"名称",dataIndex:"name",
@@ -55,7 +55,7 @@ export const  List =({ users , reFresh, ...props }:ListProps) =>{
         <Dropdown overlay={
           <Menu>
             <Menu.Item key={"edit"}>
-              <Button type='link' onClick={dispatch(projectListSliceAction.openProjectModal)}>编辑</Button>
+              <Button type='link' onClick={()=>dispatch(projectListSliceAction.openProjectModal())}>编辑</Button>
             </Menu.Item>
             <Menu.Item>
             </Menu.Item>

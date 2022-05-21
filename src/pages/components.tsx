@@ -18,7 +18,8 @@ export const ProjectPopover = ()=>{
           </List.Item>
         ))
       }
-      <Button style={{padding:0}} type='link' onClick={dispatch(projectListSliceAction.openProjectModal)}> 创建项目 </Button>
+      <Button style={{padding:0}} type='link' 
+      onClick={()=>dispatch(projectListSliceAction.openProjectModal())}> 创建项目 </Button>
     </List>
   </div>)
   return (

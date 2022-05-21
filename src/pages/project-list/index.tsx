@@ -23,7 +23,7 @@ export const ProjectListScreen = ()=>{
     <Container>
       <Row>
         <h2>项目列表</h2>
-        <Button type='default' onClick={dispatch(projectListSliceAction.openProjectModal)}>
+        <Button type='default' onClick={()=>dispatch(projectListSliceAction.openProjectModal())}>
           创建项目
         </Button>
       </Row>

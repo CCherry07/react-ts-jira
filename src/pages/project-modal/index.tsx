@@ -10,9 +10,9 @@ export  function PageProjectModal() {
   const dispatch = useDispatch()
   const projectModalOpen = useSelector(selectProjectModalOpen)
   return (
-    <Drawer onClose={dispatch(projectListSliceAction.closeProjectModal)} visible={projectModalOpen} width={"100vw"}>
+    <Drawer onClose={()=>dispatch(projectListSliceAction.closeProjectModal())} visible={projectModalOpen} width={"100vw"}>
       PageProjectModal
-      <Button onClick={dispatch(projectListSliceAction.closeProjectModal)}></Button>
+      <Button onClick={()=>dispatch(projectListSliceAction.openProjectModal())}></Button>
     </Drawer>
   )
 }
