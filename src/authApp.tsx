@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Navigate, Route , Routes } from 'react-router-dom'
 import { Button ,Dropdown ,Menu} from 'antd'
 import { UnauthApp } from "./unAuth-app";
@@ -16,39 +16,34 @@ import { ProjectPopover } from "./pages/components";
 
 
 export const AuthApp =()=>{
-  const [ pageProjectModalOpen , setPageProjectModalOpen ] = useState(false) 
   useDocTitle("项目列表",false)
   return (
     <Container>
-      <PageHeader setPageProjectModalOpen={setPageProjectModalOpen}></PageHeader>
+      <PageHeader></PageHeader>
       <Main>
           <BrowserRouter>
             <Routes>
-            <Route path="/projects" element={ <ProjectListScreen setPageProjectModalOpen={setPageProjectModalOpen}/>} ></Route>
+            <Route path="/projects" element={ <ProjectListScreen/>} ></Route>
             <Route path="/projects/:projectId/*" element={<PageProject/>}/>
             <Route path="*" element={<Navigate to={ "/projects" } replace={true}/>} />
             </Routes>
           </BrowserRouter>
       </Main>
-      <PageProjectModal pageProjectModalOpen={pageProjectModalOpen}  onClose={()=>setPageProjectModalOpen(false)}></PageProjectModal>
+      <PageProjectModal></PageProjectModal>
     </Container>
   )
 }
 
-interface PageHeaderProps{
-  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
-}
 
-const PageHeader =({setPageProjectModalOpen}:PageHeaderProps)=>{
+const PageHeader =()=>{
   const {loginOut , user} = useAuth()
   return(
     <Header>
     <Row marginRight={2} > 
-      {/* <Button onClick={()=>setPageProjectModalOpen(true)}></Button> */}
       <Button style={{padding:0,border:"none"}} type="link" onClick={resetRouter}>
       <SoftwareLogo width={"17rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
       </Button>
-      <ProjectPopover setPageProjectModalOpen={setPageProjectModalOpen}></ProjectPopover>
+      <ProjectPopover></ProjectPopover>
       <h3> CHERRY </h3>  
       <h3> LOVE </h3>  
     </Row>
