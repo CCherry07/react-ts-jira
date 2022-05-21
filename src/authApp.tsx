@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Navigate, Route , Routes } from 'react-router-dom'
 import { Button ,Dropdown ,Menu} from 'antd'
 import { UnauthApp } from "./unAuth-app";
@@ -10,13 +10,16 @@ import {ReactComponent as SoftwareLogo} from './assets/software-logo.svg'
 import { useDocTitle} from "./hooks";
 import { PageProject } from "./pages/project";
 import { resetRouter } from "./utils";
+import { PageProjectModal } from "./pages/project-modal";
 
 
 
 export const AuthApp =()=>{
+  const [ pageProjectModalOpen , setPageProjectModalOpen ] = useState(false) 
   useDocTitle("项目列表",false)
   return (
     <Container>
+          <Button onClick={()=>setPageProjectModalOpen(true)}></Button>
       <PageHeader></PageHeader>
       <Main>
           <BrowserRouter>
@@ -27,6 +30,7 @@ export const AuthApp =()=>{
             </Routes>
           </BrowserRouter>
       </Main>
+      <PageProjectModal pageProjectModalOpen={pageProjectModalOpen}  onClose={()=>setPageProjectModalOpen(false)}></PageProjectModal>
     </Container>
   )
 }
@@ -35,6 +39,7 @@ const PageHeader =()=>{
   const {loginOut , user} = useAuth()
   return(
     <Header>
+
     <Row marginRight={2} > 
       <Button style={{padding:0,border:"none"}} type="link" onClick={resetRouter}>
       <SoftwareLogo width={"17rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
