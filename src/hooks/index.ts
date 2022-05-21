@@ -1,6 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-// import qs from "qs"
-// import {http} from "../hooks/https"
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react"
 import {clearObject} from '../utils'
 import { useSearchParams } from "react-router-dom"
 import { useHttp } from "./https"
@@ -36,26 +34,30 @@ const defaultConfig = {
   processErrorBySelf:false
 }
 
+const useSafeDispatch = <T>(dispatch:(...args:T[])=>void)=>{
+  const muntedRef = useMuntedRef()
+  return useCallback((...args:T[])=>(muntedRef.current ? dispatch(...args):void 0) , [dispatch , muntedRef])
+}
+
 // processErrorBySelf
 export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig)=>{
   const config = {...defaultConfig , ...initConfig }
-  const [ state , setState ] = useState<State<D>>({
+  const [ state , dispatch ] = useReducer((state:State<D>, action:Partial<State<D>>)=>({...state , ...action}),{
     ...defaultInitState,
     ...initState
   })
   const [ retry , setReTry ] = useState(()=>()=>{})
-  const setData = (data:D) => setState({
+  const safeDispatch = useSafeDispatch(dispatch)
+  const setData = (data:D) => safeDispatch({
     data,
     status:"success",
     error:null
   })  
-  const setError = (error:Error) => setState({
+  const setError = (error:Error) => safeDispatch({
     data:null,
     status:"error",
     error
   })  
-  const muntedRef = useMuntedRef() 
-
   const run  = useCallback(( promise:Promise<D> ,runConfig?:{ retry:()=>Promise<D> } )=>{
     if (!promise || !promise.then) {
       throw new Error("please Pass In The PromiseType !");
@@ -65,18 +67,16 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
         run(runConfig.retry(),runConfig)
       }
     })
-    setState({...state , status:"loading"})
+    safeDispatch({status:"loading"})
     return promise.then(data=>{
-      if (muntedRef.current) {
         setData(data)
-      }
       return data
     },(error=>{
       setError(error)
       if (config.processErrorBySelf) return Promise.reject(error)
       return error
     }))
-  },[muntedRef,retry,setData,setError,state])
+  },[retry,setData,setError,state])
   return {
     isIdle:state.status ==="idle",
     isLoading:state.status ==="loading",
@@ -157,6 +157,59 @@ export const useMuntedRef = ()=>{
   })
   return muntedRef
 }
+
+// 实用reducer 改写useUndo
+
+const SET = "SET"
+const UNDO = "UNDO"
+const REDO = "REDO"
+const RESET = "RESET"
+
+type ActionType<T> = {
+  newPresent?:T,
+  type: typeof SET|typeof UNDO|typeof REDO|typeof RESET
+}
+const undoReducer = <T>(state:StateType<T>,actions:ActionType<T>)=>{
+    const {past , persent , future } = state
+    const {type , newPresent } = actions
+    switch (type) {
+      case UNDO:{
+        if (past.length === 0) return state
+        const previous = past[past.length - 1]
+        const newPast = past.slice(0,past.length - 1)
+        return {
+          persent:previous,
+          past:newPast,
+          future:[persent , ...future]
+        }
+      }
+      case REDO:{
+        if (past.length === 0) return state
+        const next = future[0]
+        const newFuture = future.slice(1)
+        return {
+          persent:next,
+          past:[...past , persent],
+          future:newFuture
+       }
+      }
+      case SET:{
+        return{
+          past:[],
+          persent:newPresent,
+          future:[]
+        }
+      }
+      case RESET:{
+        return {
+          past:[],
+          persent:newPresent,
+          future:[]
+        }
+      }
+    }
+  return state
+}
 //useUndo
 interface StateType<T>{
   past:T[]
@@ -164,60 +217,19 @@ interface StateType<T>{
   future:T[]
 }
 export const useUndo = <T>(initPresent:T)=>{
-  const [state , setState] = useState<StateType<T>>({
+  // usereducer
+  const [state , dispatch] = useReducer(undoReducer,{
     past:[],
     persent:initPresent,
     future:[]
-  })
+  }) 
   const canUndo = state.past.length !== 0
   const canRedo = state.future.length !== 0
   // useCallBack
-  const undo =()=>{
-    setState(currentState=>{
-      const { past , persent , future} = currentState
-      if (past.length === 0) return currentState
-      const previous = past[past.length - 1]
-      const newPast = past.slice(0,past.length - 1)
-      return {
-        persent:previous,
-        past:newPast,
-        future:[persent , ...future]
-      }
-    })
-  } 
-  const redo=()=>{
-    setState(currentState=>{
-      const { past , persent , future} = currentState
-      if (past.length === 0) return currentState
-      const next = future[0]
-      const newFuture = future.slice(1)
-      return {
-        persent:next,
-        past:[...past , persent],
-        future:newFuture
-      }
-    })
-  }
-  const set = (newPresent:T)=>{
-    if (newPresent ===state.persent) return
-    setState((currentState)=>{
-      const { past , persent} = currentState
-      return {
-        past:[...past,persent],
-        persent:newPresent,
-        future:[]
-      }
-    })
-  }
-  const reset = (newPresent:T)=>{
-    setState(()=>{
-      return{
-        past:[],
-        persent:newPresent,
-        future:[]
-      }
-    })
-  }
+  const undo =()=>dispatch({type:UNDO})
+  const redo=()=>dispatch({type:REDO})
+  const set = (newPresent:T)=>dispatch({type:SET,newPresent})
+  const reset = (newPresent:T)=>dispatch({type:RESET,newPresent})
   return [
     state,
     { undo , redo , set,reset, canRedo , canUndo}
