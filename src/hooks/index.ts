@@ -157,3 +157,69 @@ export const useMuntedRef = ()=>{
   })
   return muntedRef
 }
+//useUndo
+interface StateType<T>{
+  past:T[]
+  persent:T
+  future:T[]
+}
+export const useUndo = <T>(initPresent:T)=>{
+  const [state , setState] = useState<StateType<T>>({
+    past:[],
+    persent:initPresent,
+    future:[]
+  })
+  const canUndo = state.past.length !== 0
+  const canRedo = state.future.length !== 0
+  // useCallBack
+  const undo =()=>{
+    setState(currentState=>{
+      const { past , persent , future} = currentState
+      if (past.length === 0) return currentState
+      const previous = past[past.length - 1]
+      const newPast = past.slice(0,past.length - 1)
+      return {
+        persent:previous,
+        past:newPast,
+        future:[persent , ...future]
+      }
+    })
+  } 
+  const redo=()=>{
+    setState(currentState=>{
+      const { past , persent , future} = currentState
+      if (past.length === 0) return currentState
+      const next = future[0]
+      const newFuture = future.slice(1)
+      return {
+        persent:next,
+        past:[...past , persent],
+        future:newFuture
+      }
+    })
+  }
+  const set = (newPresent:T)=>{
+    if (newPresent ===state.persent) return
+    setState((currentState)=>{
+      const { past , persent} = currentState
+      return {
+        past:[...past,persent],
+        persent:newPresent,
+        future:[]
+      }
+    })
+  }
+  const reset = (newPresent:T)=>{
+    setState(()=>{
+      return{
+        past:[],
+        persent:newPresent,
+        future:[]
+      }
+    })
+  }
+  return [
+    state,
+    { undo , redo , set,reset, canRedo , canUndo}
+  ]
+}
