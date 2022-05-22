@@ -13,7 +13,7 @@ export const ProjectPopover = ()=>{
     <List>
       {  
         pinnedProjects?.map(project=>(
-          <List.Item>
+          <List.Item key={project.id}>
             <List.Item.Meta title={project.name}></List.Item.Meta>
           </List.Item>
         ))
@@ -24,7 +24,7 @@ export const ProjectPopover = ()=>{
   </div>)
   return (
     <Popover placement='bottom' content={content}>
-      <h3> 项目 </h3>
+      <h3 style={{cursor:"pointer"}}> 项目 </h3>
     </Popover>
   )
 }
