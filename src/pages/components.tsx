@@ -6,7 +6,7 @@ interface ProjectPopoverProps{
   setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
 }
 export const ProjectPopover = ({setPageProjectModalOpen}:ProjectPopoverProps)=>{
-  const {data:projects , isLoading} = useData<projectType[]>({remainingUrl:"projects"})
+  const {data:projects} = useData<projectType[]>({remainingUrl:"projects"})
   const pinnedProjects = projects?.filter(project => project.pin)
   const content = (<div style={{width:"20rem"}}>
     <Typography.Text type='secondary'>收藏项目</Typography.Text>
@@ -23,7 +23,7 @@ export const ProjectPopover = ({setPageProjectModalOpen}:ProjectPopoverProps)=>{
   </div>)
   return (
     <Popover placement='bottom' content={content}>
-      <h3> 项目 </h3>
+      <h3 style={{cursor:"pointer"}}> 项目 </h3>
     </Popover>
   )
 }

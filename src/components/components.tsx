@@ -1,6 +1,5 @@
 
 import { Spin , Typography ,Select , Rate} from 'antd';
-// import { SelectProps} from 'antd/es/select'
 import styled from "@emotion/styled";
 import { userType } from '../pages/project-list/type';
 import { useData } from '../hooks';
@@ -60,7 +59,6 @@ interface IdSelectType extends Omit<SelectProps,"value"|"onChange"|"defaultOptio
 }
 
 const toNumber = ( value:unknown)=> isNaN(Number(value)) ? 0 :Number(value)
-const handleIdType = (isStringId:boolean,value:unknown)=> isStringId?String(value) : toNumber(value)
 export const IdSelect = (props: IdSelectType) => {
   const { value, onChange, defaultOptionName, options, ...restProps } = props;
   return (
