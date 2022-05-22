@@ -1,8 +1,8 @@
 import { projectType } from "./type"
-import { useAsync, useQueryParam} from "../../hooks"
+import { useAsync, useProjects, useQueryParam} from "../../hooks"
 import { useHttp } from "../../hooks/https";
 import { useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const useEditProject = () =>{
     const { run,...asyncResult } = useAsync()
@@ -19,29 +19,15 @@ export const useEditProject = () =>{
     }
 }
 
-export const useEditProjectWithQuery = ()=>{
+export const useEditProjectWithQuery = (queryKey:QueryKey)=>{
   const client = useHttp()
-  const queryClient = useQueryClient()
-  const [searchParams] = useProjectsSearchParams()      
-  const queryKey = ["projects",searchParams]
   return useMutation(
     (params:Partial<projectType>)=>client(`projects/${params.id}`,{
       method:"PATCH",
       data:params
-    }),{
-      onSuccess:()=>queryClient.invalidateQueries("projects"),
-      async onMutate(target){
-        const previousItems = queryClient.getQueriesData(queryKey)
-        queryClient.setQueryData(queryKey,(old?:projectType[])=>{
-          return old?.map(project=>project.id===target.id?{...project,...target}:project) || []
-        })
-        return{previousItems}
-      },
-      onError(error,newItem,context){
-        const queryKey = ["projects",searchParams]
-        queryClient.setQueryData(queryKey,(context as { previousItems:projectType[]}).previousItems)
-      }
-    })
+    }),
+    useEditUpdate(queryKey)
+  )
 }
 export const useAddProject = () =>{
     const { run,...asyncResult } = useAsync()
@@ -58,18 +44,40 @@ export const useAddProject = () =>{
     }
 }
 
+export const useConfig = (queryKey:QueryKey , callback:(target:any,old?:any[])=>any[])=>{
+  const queryClient = useQueryClient()
+  return{
+    onSuccess:()=>queryClient.invalidateQueries("projects"),
+    async onMutate(target:any){
+      const previousItems = queryClient.getQueriesData(queryKey)
+      queryClient.setQueryData(queryKey,(old?:any[])=>{
+        return callback(target , old)
+      })
+      return{previousItems}
+    },
+    onError(error:any,newItem:any,context:any){
+      queryClient.setQueryData(queryKey,(context as { previousItems:projectType[]}).previousItems)
+    }
+  }
+}
+export const useDeleteUpdate = (queryKey:QueryKey)=>
+        useConfig(queryKey,(target,old)=>old?.filter(item=>item.id !== target.id)||[])
+export const useEditUpdate = (queryKey:QueryKey)=>
+        useConfig(queryKey,(target,old)=>old?.map(item=>item.id === target.id?{...item
+        ,...target}:item)||[])
+export const useAddUpdate = (queryKey:QueryKey)=>
+        useConfig(queryKey,(target,old)=>old?[...old,target] : [])
 
 // 使用usequery
-export const useAddProjectWithQuery = ()=>{
+export const useAddProjectWithQuery = (queryKey:QueryKey)=>{
   const client = useHttp()
-  const queryClient = useQueryClient()
   return useMutation(
     (params:Partial<projectType>)=>client("projects",{
       method:"POST",
       data:params
-    }),{
-      onSuccess:()=>queryClient.invalidateQueries("projects")
-    })
+    }),
+    useAddUpdate(queryKey)  
+  )
 }
 
 // 项目列表搜索的参数
@@ -78,11 +86,12 @@ export const useProjectsSearchParams = () => {
   return [
     useMemo(
       () => ({ ...param, personId: Number(param.personId) || undefined }),
-      [param]
-    ),
+      [param]),
     setParam,
   ] as const;
 };
+
+export const useProjectsQueryKey=()=>["projects",useProjectsSearchParams()[0]]
 
 export const useProject = (id?:number)=>{
   const client = useHttp()

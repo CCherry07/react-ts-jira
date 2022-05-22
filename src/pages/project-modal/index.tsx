@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import {Drawer,Button ,Spin,Form , Input } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import { useAddProjectWithQuery, useEditProjectWithQuery, useProjectsModal } from '../project-list/projectHooks'
+import { useAddProjectWithQuery, useEditProjectWithQuery, useProjectsModal, useProjectsQueryKey } from '../project-list/projectHooks'
 import { useDocTitle } from '../../hooks'
 import { Row, ShowError, UserSelect } from '../../components/components'
 
@@ -10,7 +10,7 @@ export  function PageProjectModal() {
   const title = editingProject ? editingProject.name : "创建项目"
   useDocTitle(title)
   const useMutateProject = editingProject?useEditProjectWithQuery : useAddProjectWithQuery
-  const { mutateAsync,error,isLoading:mutateLoading } = useMutateProject()
+  const { mutateAsync,error,isLoading:mutateLoading } = useMutateProject(useProjectsQueryKey())
   const [form] = useForm()
   const onFinish = (values:{name:string,organization:string,personId:number})=>{
     mutateAsync({...editingProject,...values}).then(()=>{

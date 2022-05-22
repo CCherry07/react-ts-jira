@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import {TableProps } from 'antd/es/table'
 import { Link } from 'react-router-dom'
 import { Pin } from '../../components/components'
-import { useEditProjectWithQuery, useProjectsModal } from './projectHooks'
+import { useEditProjectWithQuery, useProjectsModal, useProjectsQueryKey } from './projectHooks'
 interface ListProps extends TableProps<projectType>  {
   users:userType[]
   reFresh?:()=>void
@@ -13,7 +13,7 @@ interface ListProps extends TableProps<projectType>  {
 export const  List =({ users, ...props }:ListProps) =>{
   const {open,startEdit} = useProjectsModal()
   // const { muTate } = useEditProject()
-  const { mutate } = useEditProjectWithQuery()
+  const { mutate } = useEditProjectWithQuery(useProjectsQueryKey())
   const pinProject =(id:number)=>(pin:boolean)=>mutate({id,pin})
   const editProject =(id:number)=>()=>startEdit(id)
   
