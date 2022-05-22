@@ -1,5 +1,5 @@
 import { projectType } from "./type"
-import { useAsync, useProjects, useQueryParam} from "../../hooks"
+import { useAsync, useQueryParam} from "../../hooks"
 import { useHttp } from "../../hooks/https";
 import { useMemo } from "react";
 import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
@@ -27,6 +27,15 @@ export const useEditProjectWithQuery = (queryKey:QueryKey)=>{
       data:params
     }),
     useEditUpdate(queryKey)
+  )
+}
+export const useDeleteProjectWithQuery = (queryKey:QueryKey)=>{
+  const client = useHttp()
+  return useMutation(
+    ({id}:{id:number})=>client(`projects/${id}`,{
+      method:"DELETE",
+    }),
+    useDeleteUpdate(queryKey)
   )
 }
 export const useAddProject = () =>{

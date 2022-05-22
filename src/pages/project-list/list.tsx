@@ -1,21 +1,21 @@
 import {projectType , userType} from './type'
-import { Table , Dropdown , Button ,Menu} from 'antd'
+import { Table , Dropdown , Button ,Menu , Modal} from 'antd'
 import dayjs from 'dayjs'
 
 import {TableProps } from 'antd/es/table'
 import { Link } from 'react-router-dom'
 import { Pin } from '../../components/components'
-import { useEditProjectWithQuery, useProjectsModal, useProjectsQueryKey } from './projectHooks'
+import { useDeleteProjectWithQuery, useEditProjectWithQuery, useProjectsModal, useProjectsQueryKey } from './projectHooks'
 interface ListProps extends TableProps<projectType>  {
   users:userType[]
   reFresh?:()=>void
 }
 export const  List =({ users, ...props }:ListProps) =>{
-  const {open,startEdit} = useProjectsModal()
+
   // const { muTate } = useEditProject()
   const { mutate } = useEditProjectWithQuery(useProjectsQueryKey())
   const pinProject =(id:number)=>(pin:boolean)=>mutate({id,pin})
-  const editProject =(id:number)=>()=>startEdit(id)
+
   
   return (<Table pagination={ false } columns={
     [
@@ -52,20 +52,39 @@ export const  List =({ users, ...props }:ListProps) =>{
     title:"Control",
     render(value,project){
       return (
-        <Dropdown overlay={
-          <Menu>
-            <Menu.Item key={"edit"}>
-              <Button type='link' onClick={editProject(project.id)}>编辑</Button>
-            </Menu.Item>
-            <Menu.Item>
-            <Button type='link'>删除</Button>
-            </Menu.Item>
-          </Menu>
-        }>
-          <Button type='link'>...</Button>
-        </Dropdown>
+        <ControlDropdown project={project}></ControlDropdown>
       )
     }
   }]} {...props}>
   </Table>)
+}
+
+
+const ControlDropdown = ({project}:{project:projectType})=>{
+  const {startEdit} = useProjectsModal()
+  const editProject =(id:number)=>()=>startEdit(id)
+  const { mutate:deleteProject } = useDeleteProjectWithQuery(useProjectsQueryKey())
+  const confirmDeleteProject = (id:number,projectName:string)=>{
+    Modal.confirm({
+      title:`确定要删除这个<${projectName}>项目吗？`,
+      content: `点击确定删除 <${projectName}>`,
+      okText:"确定",
+      cancelText:"取消",
+      onOk(){
+        deleteProject({id})
+      }
+    })
+  }
+  return (<Dropdown overlay={
+    <Menu>
+      <Menu.Item key={"edit"}>
+        <Button type='link' onClick={editProject(project.id)}>编辑</Button>
+      </Menu.Item>
+      <Menu.Item key={"delete"}>
+      <Button type='link' onClick={()=>(confirmDeleteProject(project.id,project.name))}>删除</Button>
+      </Menu.Item>
+    </Menu>
+  }>
+    <Button type='link'>...</Button>
+  </Dropdown>)
 }
