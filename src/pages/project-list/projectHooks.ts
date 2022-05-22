@@ -2,7 +2,7 @@ import { projectType } from "./type"
 import { useAsync, useQueryParam} from "../../hooks"
 import { useHttp } from "../../hooks/https";
 import { useMemo } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const useEditProject = () =>{
     const { run,...asyncResult } = useAsync()
@@ -71,16 +71,33 @@ export const useProjectsSearchParams = () => {
   ] as const;
 };
 
+export const useProject = (id?:number)=>{
+  const client = useHttp()
+  return useQuery<projectType>(
+    ["project",{id}],
+    ()=>client(`project/${id}`),
+    {
+      enabled:!!id
+    }
+  )
+}
+
 
 // 控制 modal 页打开
 export const useProjectsModal = ()=>{
   const [{projectCreate},setProjectCreate] = useQueryParam(["projectCreate"])
+  const [{ editingProjectId},setEditingProjectId] = useQueryParam(["editingProjectId"])
+  const {data:editingProject,isLoading} = useProject(Number(editingProjectId))
   const open = ()=>setProjectCreate({projectCreate:true})
-  const close = ()=>setProjectCreate({projectCreate:false})
-
+  const close = ()=>{
+    setProjectCreate({projectCreate:false})
+    setEditingProjectId({editingProjectId:undefined})
+  }
+  const startEdit = (id:number)=>setEditingProjectId({editingProjectId:id})
   return {
-    projectCreateOpen: projectCreate === "true",
-    open,close
+    projectCreateOpen: projectCreate === "true" || !!editingProject,
+    editingProject,isLoading,
+    open,close,startEdit
   }
 }
  
