@@ -86,13 +86,12 @@ export const useProject = (id?:number)=>{
 // 控制 modal 页打开
 export const useProjectsModal = ()=>{
   const [{projectCreate},setProjectCreate] = useQueryParam(["projectCreate"])
-  const [{ editingProjectId},setEditingProjectId] = useQueryParam(["editingProjectId"])
+  const [{editingProjectId},setEditingProjectId] = useQueryParam(["editingProjectId"])
   const {data:editingProject,isLoading} = useProject(Number(editingProjectId))
   const open = ()=>setProjectCreate({projectCreate:true})
   const close = ()=>{
+    projectCreate?setProjectCreate({projectCreate:""}):
     setEditingProjectId({editingProjectId:""})
-    setProjectCreate({projectCreate:""})
-    
   }
   const startEdit = (id:number)=>setEditingProjectId({editingProjectId:id})
   return {
@@ -101,4 +100,4 @@ export const useProjectsModal = ()=>{
     open,close,startEdit
   }
 }
- 
+

@@ -23,7 +23,6 @@ export  function PageProjectModal() {
     form.setFieldsValue(editingProject)
   },[editingProject,form])
   return (
-  
     <Drawer forceRender onClose={close} visible={projectCreateOpen} width={"100vw"}>
         <Row flexDirection='column' style={{height:"80vh"}}>
       {
@@ -51,6 +50,5 @@ export  function PageProjectModal() {
       <Button onClick={close}></Button>
       </Row>
     </Drawer>
-   
   )
 }

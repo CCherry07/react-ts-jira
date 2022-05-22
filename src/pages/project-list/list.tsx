@@ -58,6 +58,7 @@ export const  List =({ users, ...props }:ListProps) =>{
               <Button type='link' onClick={editProject(project.id)}>编辑</Button>
             </Menu.Item>
             <Menu.Item>
+            <Button type='link'>删除</Button>
             </Menu.Item>
           </Menu>
         }>
