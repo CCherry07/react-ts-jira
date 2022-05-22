@@ -2,6 +2,7 @@ import { projectType } from "./type"
 import { useAsync, useQueryParam} from "../../hooks"
 import { useHttp } from "../../hooks/https";
 import { useMemo } from "react";
+import { useMutation, useQueryClient } from "react-query";
 
 export const useEditProject = () =>{
     const { run,...asyncResult } = useAsync()
@@ -17,11 +18,23 @@ export const useEditProject = () =>{
       ...asyncResult
     }
 }
+
+export const useEditProjectWithQuery = ()=>{
+  const client = useHttp()
+  const queryClient = useQueryClient()
+  return useMutation(
+    (params:Partial<projectType>)=>client(`projects/${params.id}`,{
+      method:"PATCH",
+      data:params
+    }),{
+      onSuccess:()=>queryClient.invalidateQueries("projects")
+    })
+}
 export const useAddProject = () =>{
     const { run,...asyncResult } = useAsync()
     const client = useHttp();
     const muTate = (params:Partial<projectType>)=>{
-        return run(client(`project/${params.id}`,{
+        return run(client(`projects/${params.id}`,{
           method:"POST",
           data:params
         }))
@@ -30,6 +43,20 @@ export const useAddProject = () =>{
       muTate,
       ...asyncResult
     }
+}
+
+
+// 使用usequery
+export const useAddProjectWithQuery = ()=>{
+  const client = useHttp()
+  const queryClient = useQueryClient()
+  return useMutation(
+    (params:Partial<projectType>)=>client(`projects/${params.id}`,{
+      method:"POST",
+      data:params
+    }),{
+      onSuccess:()=>queryClient.invalidateQueries("projects")
+    })
 }
 
 // 项目列表搜索的参数
@@ -56,3 +83,4 @@ export const useProjectsModal = ()=>{
     open,close
   }
 }
+ 

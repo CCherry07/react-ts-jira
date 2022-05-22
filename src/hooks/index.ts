@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {clearObject} from '../utils'
 import { useSearchParams } from "react-router-dom"
 import { useHttp } from "./https"
+import { useQuery } from "react-query"
+import { paramType, projectType } from "../pages/project-list/type"
 
 export const useMount =(cb:()=>void)=>{
   useEffect(()=>{
@@ -111,6 +113,14 @@ export const useData = <T>(parameter:useDataParamType)=>{
      setrestData
    }
 }
+
+export const useProjects = (param:paramType)=>{
+  const client = useHttp()
+  return useQuery<projectType[]>(["projects",param],()=>{
+    return client("projects",{data:param})
+  })
+}
+
 
 export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
   //将传进来的title实用useRef 持久化，不受生命周期的影响

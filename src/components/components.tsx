@@ -104,3 +104,13 @@ export const Pin = (props:PinPros)=>{
   )
 }
 
+
+//类型守卫
+const isError = (value:any):value is Error=>value?.message
+export const ShowError = ( {error}:{error:unknown} )=>{
+  if (isError(error)) {
+    return <Typography.Text type='danger'>{error.message}</Typography.Text>
+  }
+  return null
+}
+

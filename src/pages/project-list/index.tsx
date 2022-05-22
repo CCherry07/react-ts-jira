@@ -5,22 +5,17 @@ import {projectType,userType } from './type'
 import { SearchPanel } from './search-panel'
 import { List} from './list'
 
-import { useData, useDebounce } from '../../hooks'
+import { useData, useDebounce, useProjects } from '../../hooks'
 import { useProjectsModal, useProjectsSearchParams } from './projectHooks'
-import { Row } from '../../components/components'
-import { Dispatch, SetStateAction } from 'react'
-
-interface ProjectListScreenProps{
-
-}
-
+import { Row, ShowError } from '../../components/components'
 export const ProjectListScreen = ()=>{
   const { open } = useProjectsModal()
   //劫持param 使其停止输入 delay 后更新
   const[param , setParam] = useProjectsSearchParams()
-  const { data:projectList , isLoading ,retry} = useData<projectType[]>(
-  { remainingUrl:"projects" ,queryOptions:useDebounce(param , 800)})
-  const{data:users } = useData<userType[]>({ remainingUrl:"users"})
+  // const { data:projectList , isLoading ,retry} = useData<projectType[]>(
+  // { remainingUrl:"projects" ,queryOptions:useDebounce(param , 800)})
+  const { data:projectList ,isLoading ,error ,isError} = useProjects(useDebounce(param , 800))  
+  const{data:users} = useData<userType[]>({ remainingUrl:"users"})
   return (
     <Container>
       <Row>
@@ -30,7 +25,8 @@ export const ProjectListScreen = ()=>{
         </Button>
       </Row>
       <SearchPanel users={ users|| [] } param={param} setParam={setParam} ></SearchPanel>
-      <List reFresh={retry} loading={isLoading} dataSource={projectList||[]} users={users || []}></List>
+      {isError? <ShowError error={error}/>
+      :<List loading={isLoading} dataSource={projectList||[]} users={users || []}/>}
     </Container>
   )
 }
