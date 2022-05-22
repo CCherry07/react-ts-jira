@@ -5,15 +5,15 @@ import dayjs from 'dayjs'
 import {TableProps } from 'antd/es/table'
 import { Link } from 'react-router-dom'
 import { Pin } from '../../components/components'
-import { useEditProject } from './projectHooks'
+import { useEditProject, useProjectsModal } from './projectHooks'
 import { Dispatch, SetStateAction } from 'react'
 
 interface ListProps extends TableProps<projectType>  {
   users:userType[]
   reFresh:()=>void
-  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
 }
-export const  List =({ users , reFresh,setPageProjectModalOpen, ...props }:ListProps) =>{
+export const  List =({ users , reFresh, ...props }:ListProps) =>{
+  const {open} = useProjectsModal()
   const { muTate } = useEditProject()
   const pinProject =(id:number)=> async (pin:boolean)=> await muTate({id,pin}).then(reFresh)
   return (<Table pagination={ false } columns={
@@ -54,7 +54,7 @@ export const  List =({ users , reFresh,setPageProjectModalOpen, ...props }:ListP
         <Dropdown overlay={
           <Menu>
             <Menu.Item key={"edit"}>
-              <Button type='link' onClick={()=>setPageProjectModalOpen(true)}>编辑</Button>
+              <Button type='link' onClick={open}>编辑</Button>
             </Menu.Item>
             <Menu.Item>
             </Menu.Item>

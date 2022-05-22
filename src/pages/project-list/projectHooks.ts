@@ -43,3 +43,16 @@ export const useProjectsSearchParams = () => {
     setParam,
   ] as const;
 };
+
+
+// 控制 modal 页打开
+export const useProjectsModal = ()=>{
+  const [{projectCreate},setProjectCreate] = useQueryParam(["projectCreate"])
+  const open = ()=>setProjectCreate({projectCreate:true})
+  const close = ()=>setProjectCreate({projectCreate:false})
+
+  return {
+    projectCreateOpen: projectCreate === "true",
+    open,close
+  }
+}

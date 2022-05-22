@@ -14,32 +14,30 @@ import { PageProjectModal } from "./pages/project-modal";
 import { ProjectPopover } from "./pages/components";
 
 
-
 export const AuthApp =()=>{
-  const [ pageProjectModalOpen , setPageProjectModalOpen ] = useState(false) 
   useDocTitle("项目列表",false)
   return (
     <Container>
-      <PageHeader setPageProjectModalOpen={setPageProjectModalOpen}></PageHeader>
-      <Main>
-          <BrowserRouter>
+      <BrowserRouter>
+      <PageHeader></PageHeader>
+        <Main>
             <Routes>
-            <Route path="/projects" element={ <ProjectListScreen setPageProjectModalOpen={setPageProjectModalOpen}/>} ></Route>
+            <Route path="/projects" element={ <ProjectListScreen/>} ></Route>
             <Route path="/projects/:projectId/*" element={<PageProject/>}/>
             <Route path="*" element={<Navigate to={ "/projects" } replace={true}/>} />
             </Routes>
-          </BrowserRouter>
-      </Main>
-      <PageProjectModal pageProjectModalOpen={pageProjectModalOpen}  onClose={()=>setPageProjectModalOpen(false)}></PageProjectModal>
+        </Main>
+      <PageProjectModal></PageProjectModal>
+      </BrowserRouter>
     </Container>
   )
 }
 
 interface PageHeaderProps{
-  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
+  
 }
 
-const PageHeader =({setPageProjectModalOpen}:PageHeaderProps)=>{
+const PageHeader =()=>{
   const {loginOut , user} = useAuth()
   return(
     <Header>
@@ -48,7 +46,7 @@ const PageHeader =({setPageProjectModalOpen}:PageHeaderProps)=>{
       <Button style={{padding:0,border:"none"}} type="link" onClick={resetRouter}>
       <SoftwareLogo width={"17rem"} color={"rgb(38,132 ,255)"}></SoftwareLogo>
       </Button>
-      <ProjectPopover setPageProjectModalOpen={setPageProjectModalOpen}></ProjectPopover>
+      <ProjectPopover></ProjectPopover>
       <h3> CHERRY </h3>  
       <h3> LOVE </h3>  
     </Row>

@@ -6,15 +6,16 @@ import { SearchPanel } from './search-panel'
 import { List} from './list'
 
 import { useData, useDebounce } from '../../hooks'
-import { useProjectsSearchParams } from './projectHooks'
+import { useProjectsModal, useProjectsSearchParams } from './projectHooks'
 import { Row } from '../../components/components'
 import { Dispatch, SetStateAction } from 'react'
 
 interface ProjectListScreenProps{
-  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
+
 }
 
-export const ProjectListScreen = ({setPageProjectModalOpen}:ProjectListScreenProps)=>{
+export const ProjectListScreen = ()=>{
+  const { open } = useProjectsModal()
   //劫持param 使其停止输入 delay 后更新
   const[param , setParam] = useProjectsSearchParams()
   const { data:projectList , isLoading ,retry} = useData<projectType[]>(
@@ -24,12 +25,12 @@ export const ProjectListScreen = ({setPageProjectModalOpen}:ProjectListScreenPro
     <Container>
       <Row>
         <h2>项目列表</h2>
-        <Button type='default' onClick={()=>setPageProjectModalOpen(true)}>
+        <Button onClick={open} type='default'>
           创建项目
         </Button>
       </Row>
       <SearchPanel users={ users|| [] } param={param} setParam={setParam} ></SearchPanel>
-      <List setPageProjectModalOpen={setPageProjectModalOpen} reFresh={retry} loading={isLoading} dataSource={projectList||[]} users={users || []}></List>
+      <List reFresh={retry} loading={isLoading} dataSource={projectList||[]} users={users || []}></List>
     </Container>
   )
 }

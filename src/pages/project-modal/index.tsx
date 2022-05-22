@@ -1,14 +1,13 @@
 import React from 'react'
 import {Drawer,Button } from 'antd'
-interface pageProjectModalProps{
-  pageProjectModalOpen:boolean
-  onClose:()=>void
-}
-export  function PageProjectModal({ pageProjectModalOpen,onClose  }:pageProjectModalProps) {
+import { useProjectsModal } from '../project-list/projectHooks'
+
+export  function PageProjectModal() {
+  const {projectCreateOpen , close} = useProjectsModal()
   return (
-    <Drawer onClose={onClose} visible={pageProjectModalOpen} width={"100vw"}>
+    <Drawer onClose={close} visible={projectCreateOpen} width={"100vw"}>
       PageProjectModal
-      <Button onClick={onClose}></Button>
+      <Button onClick={close}></Button>
     </Drawer>
   )
 }
