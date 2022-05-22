@@ -6,14 +6,15 @@ import {TableProps } from 'antd/es/table'
 import { Link } from 'react-router-dom'
 import { Pin } from '../../components/components'
 import { useEditProject } from './projectHooks'
-import { Dispatch, SetStateAction } from 'react'
+import { useDispatch } from 'react-redux'
+import { projectListSliceAction } from './projectList.slice'
 
 interface ListProps extends TableProps<projectType>  {
   users:userType[]
   reFresh:()=>void
-  setPageProjectModalOpen:Dispatch<SetStateAction<boolean>>
 }
-export const  List =({ users , reFresh,setPageProjectModalOpen, ...props }:ListProps) =>{
+export const  List =({ users , reFresh, ...props }:ListProps) =>{
+  const dispatch = useDispatch()
   const { muTate } = useEditProject()
   const pinProject =(id:number)=> async (pin:boolean)=> await muTate({id,pin}).then(reFresh)
   return (<Table pagination={ false } columns={
@@ -21,7 +22,7 @@ export const  List =({ users , reFresh,setPageProjectModalOpen, ...props }:ListP
       {
         title:<Pin checked={true} disabled={true}/>,
         render(value,project){
-          return <Pin checked={project.pin} onCheckedChange={pin=>pinProject(project.id)(pin)}></Pin>
+          return <Pin key={project.id} checked={project.pin} onCheckedChange={pin=>pinProject(project.id)(pin)}></Pin>
         }
       },
       {title:"名称",dataIndex:"name",
@@ -54,7 +55,7 @@ export const  List =({ users , reFresh,setPageProjectModalOpen, ...props }:ListP
         <Dropdown overlay={
           <Menu>
             <Menu.Item key={"edit"}>
-              <Button type='link' onClick={()=>setPageProjectModalOpen(true)}>编辑</Button>
+              <Button type='link' onClick={()=>dispatch(projectListSliceAction.openProjectModal())}>编辑</Button>
             </Menu.Item>
             <Menu.Item>
             </Menu.Item>

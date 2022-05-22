@@ -1,6 +1,6 @@
 import { http } from '../../hooks/https'
 import { userType } from '../../pages/project-list/type'
-interface userinfo {
+export interface userinfo {
   username:string,
   password:string
 }
@@ -21,4 +21,4 @@ export const loginWithregister = async (userinfo:userinfo,type:"login" | "regist
      setToken(user.token)
   return http(url,{data:userinfo,method:"POST"})
 }
-export const loginOut = () => window.localStorage.removeItem(localstoreKey)
+export const loginOut = () =>window.localStorage.removeItem(localstoreKey)
