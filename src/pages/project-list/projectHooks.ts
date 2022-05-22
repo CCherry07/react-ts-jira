@@ -22,12 +22,25 @@ export const useEditProject = () =>{
 export const useEditProjectWithQuery = ()=>{
   const client = useHttp()
   const queryClient = useQueryClient()
+  const [searchParams] = useProjectsSearchParams()      
+  const queryKey = ["projects",searchParams]
   return useMutation(
     (params:Partial<projectType>)=>client(`projects/${params.id}`,{
       method:"PATCH",
       data:params
     }),{
-      onSuccess:()=>queryClient.invalidateQueries("projects")
+      onSuccess:()=>queryClient.invalidateQueries("projects"),
+      async onMutate(target){
+        const previousItems = queryClient.getQueriesData(queryKey)
+        queryClient.setQueryData(queryKey,(old?:projectType[])=>{
+          return old?.map(project=>project.id===target.id?{...project,...target}:project) || []
+        })
+        return{previousItems}
+      },
+      onError(error,newItem,context){
+        const queryKey = ["projects",searchParams]
+        queryClient.setQueryData(queryKey,(context as { previousItems:projectType[]}).previousItems)
+      }
     })
 }
 export const useAddProject = () =>{

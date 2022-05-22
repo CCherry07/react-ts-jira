@@ -39,8 +39,8 @@ export  function PageProjectModal() {
             <Form.Item label="负责人" name={"personId"}>
               <UserSelect defaultOptionName='负责人' ></UserSelect>
             </Form.Item>  
-            <Form.Item>
-              <Button loading={mutateLoading} type={"primary"} htmlType="submit">
+            <Form.Item style={{textAlign:"right"}}>
+              <Button  loading={mutateLoading} type={"primary"} htmlType="submit">
                 提交
               </Button>
             </Form.Item>  

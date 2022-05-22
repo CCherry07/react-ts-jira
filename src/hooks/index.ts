@@ -146,6 +146,7 @@ export const useQueryParam =<T extends string>(keys:T[])=>{
   const [searchParams ,setSearchParams] = useSearchParams()
   return [
     useMemo(()=>keys.reduce((prev:ParamType<T>,key:T)=>{
+      console.log(searchParams.get(key));
       return {...prev,[key]:searchParams.get(key) || ""}
     },{} as ParamType<T>),[searchParams]),
     (params:Partial<{[key in T]:unknown}> )=>{
