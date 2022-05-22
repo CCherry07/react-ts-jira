@@ -51,7 +51,7 @@ export const useAddProjectWithQuery = ()=>{
   const client = useHttp()
   const queryClient = useQueryClient()
   return useMutation(
-    (params:Partial<projectType>)=>client(`projects/${params.id}`,{
+    (params:Partial<projectType>)=>client("projects",{
       method:"POST",
       data:params
     }),{
@@ -75,7 +75,7 @@ export const useProject = (id?:number)=>{
   const client = useHttp()
   return useQuery<projectType>(
     ["project",{id}],
-    ()=>client(`project/${id}`),
+    ()=>client(`projects/${id}`),
     {
       enabled:!!id
     }
@@ -90,8 +90,9 @@ export const useProjectsModal = ()=>{
   const {data:editingProject,isLoading} = useProject(Number(editingProjectId))
   const open = ()=>setProjectCreate({projectCreate:true})
   const close = ()=>{
-    setProjectCreate({projectCreate:false})
-    setEditingProjectId({editingProjectId:undefined})
+    setEditingProjectId({editingProjectId:""})
+    setProjectCreate({projectCreate:""})
+    
   }
   const startEdit = (id:number)=>setEditingProjectId({editingProjectId:id})
   return {

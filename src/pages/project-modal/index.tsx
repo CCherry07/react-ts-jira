@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react'
 import {Drawer,Button ,Spin,Form , Input } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import { useEditProjectWithQuery, useProjectsModal } from '../project-list/projectHooks'
+import { useAddProjectWithQuery, useEditProjectWithQuery, useProjectsModal } from '../project-list/projectHooks'
 import { useDocTitle } from '../../hooks'
-import { ShowError, UserSelect } from '../../components/components'
+import { Row, ShowError, UserSelect } from '../../components/components'
 
 export  function PageProjectModal() {
   const {projectCreateOpen , close,editingProject,isLoading} = useProjectsModal()
   const title = editingProject ? editingProject.name : "创建项目"
-  useDocTitle(title,false)
-  const useMutateProject = editingProject?useEditProjectWithQuery : useEditProjectWithQuery
+  useDocTitle(title)
+  const useMutateProject = editingProject?useEditProjectWithQuery : useAddProjectWithQuery
   const { mutateAsync,error,isLoading:mutateLoading } = useMutateProject()
   const [form] = useForm()
   const onFinish = (values:{name:string,organization:string,personId:number})=>{
@@ -23,7 +23,9 @@ export  function PageProjectModal() {
     form.setFieldsValue(editingProject)
   },[editingProject,form])
   return (
-    <Drawer onClose={close} visible={projectCreateOpen} width={"100vw"}>
+  
+    <Drawer forceRender onClose={close} visible={projectCreateOpen} width={"100vw"}>
+        <Row flexDirection='column' style={{height:"80vh"}}>
       {
         isLoading?<Spin size='large'></Spin>:<>
           <h1>{title}</h1>
@@ -47,6 +49,8 @@ export  function PageProjectModal() {
         </>
       }
       <Button onClick={close}></Button>
+      </Row>
     </Drawer>
+   
   )
 }
