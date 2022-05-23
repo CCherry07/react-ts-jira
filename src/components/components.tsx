@@ -1,9 +1,9 @@
 
 import { Spin , Typography ,Select , Rate} from 'antd';
 import styled from "@emotion/styled";
-import { userType } from '../pages/project-list/type';
 import { useData } from '../hooks';
 import React from 'react';
+import { userType } from '../pages/project-list/type';
 
 //Row
 type flexDirection = "row"|"row-reverse"|"column"|"column-reverse"

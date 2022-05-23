@@ -1,4 +1,4 @@
-import { userType , paramType, projectType } from './type'
+import { userType , projectType } from './type'
 import { Input , Form } from 'antd'
 import { UserSelect } from '../../components/components';
 export interface propsType{

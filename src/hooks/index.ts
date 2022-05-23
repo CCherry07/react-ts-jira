@@ -142,7 +142,7 @@ export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
 
 type ParamType<T extends string> = {[k in T]:string}
 
-// 获取 query 里面的键值对
+// 获取query 里面的键值对
 export const useQueryParam =<T extends string>(keys:T[])=>{
   const [searchParams] = useSearchParams()
   const setSearchParams = useSetUrlSearchParam()

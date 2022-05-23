@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import  { Button } from 'antd'
-import {projectType,userType } from './type'
+import {userType } from './type'
 
 import { SearchPanel } from './search-panel'
 import { List} from './list'

@@ -1,8 +1,8 @@
-import React, { Dispatch, SetStateAction } from 'react';
 import {Popover , Typography ,List   ,Button} from 'antd'
 import { useData } from '../hooks';
-import { projectType } from './project-list/type';
+
 import { useProjectsModal } from './project-list/projectHooks';
+import { projectType } from './project-list/type';
 interface ProjectPopoverProps{
 
 }
