@@ -26,7 +26,7 @@ export const useTaskSearchParams =()=>{
   }),[projectId,param])
 }
 
-export const useTaskQueryKey = ()=>["tasks",useTaskSearchParams]
+export const useTaskQueryKey = ()=>["tasks",useTaskSearchParams()]
 
 export const useTaskTypes = ()=>{
   const client = useHttp()

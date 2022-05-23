@@ -5,7 +5,7 @@ import { useDocTitle } from "../../../hooks"
 import { Signboard } from "../../../types/signboard"
 import { useTasks, useTaskSearchParams } from "../epic/taskHooks"
 import { SearchPanel } from "../searchPanel"
-import { CreateSignboard, SignboardColumn, TaskContainer } from "./components"
+import { CreateSignboard, SignboardColumn, TaskContainer, TaskModal } from "./components"
 import { useProjectById, useSignboards, useSignboardSearchParams } from "./signboardHooks"
 
 export const PageSignboard=()=>{
@@ -14,12 +14,13 @@ export const PageSignboard=()=>{
   const { data:currentProject } = useProjectById()
   const { isLoading:taskIsLoading  } = useTasks(useTaskSearchParams())
   const isLoading = signboardsIsloading || taskIsLoading
-  
+
   return (
    <PageContainer> 
      <h1>{currentProject?.name} 看板 </h1>
      <SearchPanel></SearchPanel>
       { isLoading ? <Spin size='large'></Spin> : <TaskMain signboards={signboards}></TaskMain> }
+    <TaskModal></TaskModal>
    </PageContainer>
   )
 }

@@ -1,21 +1,23 @@
-import { Card , Input} from 'antd'
+import { Card , Input ,Form, Modal} from 'antd'
+import {useForm} from 'antd/es/form/Form'
 import { Signboard } from "../../../types/signboard";
 import { useTaskQueryKey, useTasks, useTaskSearchParams, useTaskTypes } from "../epic/taskHooks";
 import taskIcon from '../../../assets/task.svg'
 import bugIcon from '../../../assets/bug.svg'
 import styled from "@emotion/styled";
-import { IdSelect } from '../../../components/components';
+import { IdSelect, UserSelect } from '../../../components/components';
 import { useEffect, useState } from 'react';
-import { useAddSignboard, useAddTask, useProjectIdInUrl, useSignboardQueryKey } from './signboardHooks';
+import { useAddSignboard, useAddTask, useEditTaskWithQuery, useProjectIdInUrl, useSignboardQueryKey, useTaskModal } from './signboardHooks';
 export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
     const {data:allTasks} = useTasks(useTaskSearchParams())
     const tasks = allTasks?.filter(task=>task.kanbanId === signboard.id)
+    const {startEdit} = useTaskModal()
     return (
       <Container>
           <h3> { signboard.name } </h3>
           <TaskContainer>
           {tasks?.map(task=>(
-            <Card style={{marginBottom:".5rem" , borderRadius:"10px"}}>
+            <Card onClick={()=>startEdit(task.id)} style={{marginBottom:".5rem" , borderRadius:"10px" , cursor:"pointer"}}>
               <div>
               {task.name}
               </div>
@@ -103,7 +105,7 @@ export const CreateTask = ({kanbanId}:{kanbanId:number})=>{
   if (!inputMode) {
     return <div style={{cursor:"pointer"}} onClick={toggle}> +创建事务 </div>
   }
-  return <Card style={{borderRadius:"10px"}}>
+  return <Card style={{borderRadius:"10px" , cursor:"pointer"}}>
     <Input onBlur={toggle} 
      placeholder="需要做些什么捏"
      autoFocus={true}
@@ -113,3 +115,48 @@ export const CreateTask = ({kanbanId}:{kanbanId:number})=>{
      ></Input>
   </Card>
 }
+
+const layout = {
+  labelCol:{span:8},
+  wrapperCol:{span:16}
+}
+
+export const TaskModal = ()=>{
+  const [form] = useForm()
+  const {editingTaskId , editingTask , close} = useTaskModal()
+  const { mutateAsync: editTask , isLoading:editLoading} = useEditTaskWithQuery(editingTaskId)
+  const onCancel = () =>{
+    close()
+    form.resetFields()
+  }
+  const onOK = async ()=>{
+    await editTask({...editingTask,...form.getFieldsValue()})
+    close()
+  }
+
+  useEffect(()=>{
+    form.setFieldsValue(editingTask)
+  },[form, editingTask])
+
+  return <Modal onCancel={onCancel} onOk={onOK} okText={"确认修改"} cancelText="取消修改"
+    confirmLoading={editLoading}
+    title="编辑任务"
+    visible={!!editingTaskId}
+  >
+    <Form {...layout} initialValues={editingTask} form={form}>
+      <Form.Item label="任务名" name={"name"} 
+        rules={[{required:true,message:"请输入任务名"}]}
+        >
+        <Input placeholder='请输入任务名'></Input>
+      </Form.Item>
+      <Form.Item label="经办人" name={"processorId"}>
+        <UserSelect defaultOptionName='经办人'></UserSelect>
+      </Form.Item>
+      <Form.Item label={`类型`} name={"typeId"} 
+        rules={[{required:true,message:"请选择类型"}]}>
+          <TaskSelect defaultValue={"task"}></TaskSelect>
+      </Form.Item>
+    </Form>
+  </Modal>
+}
+
