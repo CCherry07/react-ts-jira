@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 // import qs from "qs"
 // import {http} from "../hooks/https"
-import {clearObject} from '../utils'
-import { useSearchParams } from "react-router-dom"
+import {clearObject, subset} from '../utils'
+import { URLSearchParamsInit, useSearchParams } from "react-router-dom"
 import { useHttp } from "./https"
 import { useQuery } from "react-query"
 import { paramType, projectType } from "../pages/project-list/type"
@@ -142,18 +142,30 @@ export const useDocTitle =(title:string,keepOnUnmount:boolean =true)=>{
 
 type ParamType<T extends string> = {[k in T]:string}
 
+// 获取 query 里面的键值对
 export const useQueryParam =<T extends string>(keys:T[])=>{
-  const [searchParams ,setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
+  const setSearchParams = useSetUrlSearchParam()
+  const [stateKeys] = useState(keys)
   return [
-    useMemo(()=>keys.reduce((prev:ParamType<T>,key:T)=>{
-      console.log(searchParams.get(key));
-      return {...prev,[key]:searchParams.get(key) || ""}
-    },{} as ParamType<T>),[searchParams]),
+    useMemo(
+      ()=>{
+       return subset(Object.fromEntries(searchParams),stateKeys) as ParamType<T>
+        },[ searchParams , stateKeys ]
+      ),
     (params:Partial<{[key in T]:unknown}> )=>{
-      const o = clearObject({...Object.fromEntries(searchParams) , ...params})
-      return setSearchParams(o)
+     return setSearchParams(params)
     }
   ] as const
+}
+
+// 更新Url Search query
+export const useSetUrlSearchParam = ()=>{
+  const [searchParams ,setSearchParams] = useSearchParams()
+  return (params:{[key in string]:unknown})=>{
+    const o = clearObject({...Object.fromEntries(searchParams) , ...params}) as URLSearchParamsInit
+      return setSearchParams(o)
+  }
 }
 
 

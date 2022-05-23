@@ -1,5 +1,5 @@
 import { projectType } from "./type"
-import { useAsync, useQueryParam} from "../../hooks"
+import { useAsync, useQueryParam, useSetUrlSearchParam} from "../../hooks"
 import { useHttp } from "../../hooks/https";
 import { useMemo } from "react";
 import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
@@ -119,11 +119,10 @@ export const useProjectsModal = ()=>{
   const [{projectCreate},setProjectCreate] = useQueryParam(["projectCreate"])
   const [{editingProjectId},setEditingProjectId] = useQueryParam(["editingProjectId"])
   const {data:editingProject,isLoading} = useProject(Number(editingProjectId))
+  const setUrlSearchParam = useSetUrlSearchParam()
   const open = ()=>setProjectCreate({projectCreate:true})
-  const close = ()=>{
-    projectCreate?setProjectCreate({projectCreate:""}):
-    setEditingProjectId({editingProjectId:""})
-  }
+  const close = ()=>setUrlSearchParam({projectCreate:"",editingProjectId:""})
+  
   const startEdit = (id:number)=>setEditingProjectId({editingProjectId:id})
   return {
     projectCreateOpen: projectCreate === "true" || !!editingProject,
