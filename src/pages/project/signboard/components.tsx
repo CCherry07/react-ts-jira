@@ -1,12 +1,12 @@
 import { Card , Input} from 'antd'
 import { Signboard } from "../../../types/signboard";
-import { useTasks, useTaskSearchParams, useTaskTypes } from "../epic/taskHooks";
+import { useTaskQueryKey, useTasks, useTaskSearchParams, useTaskTypes } from "../epic/taskHooks";
 import taskIcon from '../../../assets/task.svg'
 import bugIcon from '../../../assets/bug.svg'
 import styled from "@emotion/styled";
 import { IdSelect } from '../../../components/components';
-import { useState } from 'react';
-import { useAddSignboard, useProjectIdInUrl, useSignboardQueryKey } from './signboardHooks';
+import { useEffect, useState } from 'react';
+import { useAddSignboard, useAddTask, useProjectIdInUrl, useSignboardQueryKey } from './signboardHooks';
 export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
     const {data:allTasks} = useTasks(useTaskSearchParams())
     const tasks = allTasks?.filter(task=>task.kanbanId === signboard.id)
@@ -22,6 +22,7 @@ export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
               <TaskTypeIcon id={task.typeId}></TaskTypeIcon>
             </Card>
          ))}
+         <CreateTask kanbanId={signboard.id}></CreateTask>
          </TaskContainer>
       </Container>
     )
@@ -58,7 +59,7 @@ export const TaskSelect = (props:Omit<React.ComponentProps<typeof IdSelect>,"opt
 }
 
 
-
+// 创建看板
 export const CreateSignboard=()=>{
   const [name , setName] = useState("")
   const projectId = useProjectIdInUrl()
@@ -78,4 +79,37 @@ export const CreateSignboard=()=>{
         ></Input>
     </Container>
   )
+}
+//创建 task
+export const CreateTask = ({kanbanId}:{kanbanId:number})=>{
+  const [name ,setName] = useState("")
+  const { mutateAsync:addTask } = useAddTask(useTaskQueryKey())
+  const projectId = useProjectIdInUrl()
+  const [ inputMode , setInputMode] = useState(false)
+  const submit = async()=>{
+    await addTask({projectId , name ,kanbanId})
+    setInputMode(false)
+    setName("")
+  }
+
+  const toggle = ()=>setInputMode(!inputMode)
+
+  useEffect(()=>{
+    if (!inputMode) {
+      setName("")
+    }
+  },[inputMode])
+
+  if (!inputMode) {
+    return <div style={{cursor:"pointer"}} onClick={toggle}> +创建事务 </div>
+  }
+  return <Card style={{borderRadius:"10px"}}>
+    <Input onBlur={toggle} 
+     placeholder="需要做些什么捏"
+     autoFocus={true}
+     onPressEnter={submit}
+     value={name}
+     onChange={evt=>setName(evt.target.value)}
+     ></Input>
+  </Card>
 }

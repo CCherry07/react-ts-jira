@@ -14,7 +14,7 @@ export const PageSignboard=()=>{
   const { data:currentProject } = useProjectById()
   const { isLoading:taskIsLoading  } = useTasks(useTaskSearchParams())
   const isLoading = signboardsIsloading || taskIsLoading
-
+  
   return (
    <PageContainer> 
      <h1>{currentProject?.name} 看板 </h1>
