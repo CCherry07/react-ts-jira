@@ -12,7 +12,7 @@ export const PageSignboard=()=>{
    <PageContainer> 
      <h1>{currentProject?.name} 看板 </h1>
      <SearchPanel></SearchPanel>
-    <Row style={{alignItems:"normal"}} justifyContent="normal">
+    <Row style={{alignItems:"normal",flex:1}} justifyContent="normal">
       {
         signboards?.map(signboard=>(
           <SignboardColumn signboard={signboard} key={signboard.id}></SignboardColumn>

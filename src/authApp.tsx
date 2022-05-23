@@ -88,7 +88,9 @@ const HeaderRight = styled.div`
   margin-right:2rem ;
 `
 
-const Main = styled.main`grid-area:main`
+const Main = styled.main`grid-area:main;
+display:flex ;
+`
 const Aside = styled.aside`grid-area:aside`
 const Nav = styled.nav`grid-area:nav`
 const Footer = styled.footer`grid-area:footer`

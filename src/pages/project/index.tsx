@@ -47,6 +47,7 @@ const Aside = styled.aside`
 
 const Main = styled.div`
   box-shadow:-5px 0 5px #dcf4e8;
+  display:flex ;
 `
 
 
