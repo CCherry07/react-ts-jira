@@ -6,8 +6,13 @@ export interface Task {
   projectId:number
   // 任务组
   epicId:number
-  signboardId:number
+  kanbanId:number
   // bug or task
   typeId:number
   note:string
+}
+
+export interface TaskType{
+  id:number,
+  name:string
 }

@@ -7,8 +7,8 @@ import { userType } from '../pages/project-list/type';
 
 //Row
 type flexDirection = "row"|"row-reverse"|"column"|"column-reverse"
-type justifyContent = "center" | "space-around"|"space-between"|"space-evenly"
-type alignItems = "center"
+type justifyContent ="normal"| "center" | "space-around"|"space-between"|"space-evenly"
+type alignItems = "center"|"normal"
 interface propsType{
   flexDirection?:flexDirection
   alignItems?:alignItems
