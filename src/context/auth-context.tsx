@@ -6,6 +6,7 @@ import * as auth from '../api/auth'
 import {http} from "../hooks/https";
 import { useAsync, useMount } from "../hooks";
 import { PullpageError, PullpageLoading } from "../components/components";
+import { useQueryClient } from "react-query";
 interface AuthForm {
   username:string,
   password:string
@@ -33,12 +34,14 @@ const initUser =async () => {
 
 AuthContext.displayName = "AuthContext"
 export const AuthProvider =( { children } : { children:ReactNode } )=>{
+  const queryClient = useQueryClient()
   const { data:user , setData:setUser , run ,isError,isIdle ,isLoading ,error }  = useAsync<userType|null>()
   // const [user , setUser] = useState<userType|null>(null)
   const login = async (form:AuthForm ) => setUser(await auth.loginWithregister(form,"login"))
   const register = async (form:AuthForm) => setUser(await auth.loginWithregister(form,"register"))
   const loginOut = ()=>{
     auth.loginOut()
+    queryClient.clear()
     setUser(null)
   }
   useMount(()=>{

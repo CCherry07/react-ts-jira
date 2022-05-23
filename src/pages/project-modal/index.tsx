@@ -18,12 +18,15 @@ export  function PageProjectModal() {
       close()
     })
   }
-
+  const closeForm = ()=>{
+    form.resetFields()
+    close()
+  }
   useEffect(()=>{
     form.setFieldsValue(editingProject)
   },[editingProject,form])
   return (
-    <Drawer forceRender onClose={close} visible={projectCreateOpen} width={"100vw"}>
+    <Drawer forceRender onClose={closeForm} visible={projectCreateOpen} width={"100vw"}>
         <Row flexDirection='column' style={{height:"80vh"}}>
       {
         isLoading?<Spin size='large'></Spin>:<>
@@ -47,7 +50,7 @@ export  function PageProjectModal() {
           </Form> 
         </>
       }
-      <Button onClick={close}></Button>
+      <Button onClick={closeForm}></Button>
       </Row>
     </Drawer>
   )
