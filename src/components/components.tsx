@@ -114,3 +114,10 @@ export const ShowError = ( {error}:{error:unknown} )=>{
   return null
 }
 
+
+export const PageContainer = styled.div`
+  width:100%;
+  padding:3.2rem ;
+  display: flex;
+  flex-direction:column;
+`

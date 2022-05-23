@@ -1,4 +1,4 @@
-import { Row } from "../../../components/components"
+import { PageContainer, Row } from "../../../components/components"
 import { useDocTitle } from "../../../hooks"
 import { SearchPanel } from "../searchPanel"
 import { SignboardColumn } from "./components"
@@ -9,7 +9,7 @@ export const PageSignboard=()=>{
   const {data:signboards} = useSignboards(useSignboardSearchParams())
   const { data:currentProject } = useProjectById()
   return (
-   <div> 
+   <PageContainer> 
      <h1>{currentProject?.name} 看板 </h1>
      <SearchPanel></SearchPanel>
     <Row style={{alignItems:"normal"}} justifyContent="normal">
@@ -19,6 +19,6 @@ export const PageSignboard=()=>{
         ))
       }
     </Row>
-   </div>
+   </PageContainer>
   )
 }

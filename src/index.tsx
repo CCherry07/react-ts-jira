@@ -1,8 +1,6 @@
 import './wdyr'
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import './index.css'
 import { DevTools ,loadServer} from 'jira-dev-tool'
 import { AppProviders } from './context'
 import "antd/dist/antd.less"

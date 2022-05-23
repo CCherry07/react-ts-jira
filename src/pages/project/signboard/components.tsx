@@ -5,8 +5,6 @@ import taskIcon from '../../../assets/task.svg'
 import bugIcon from '../../../assets/bug.svg'
 import styled from "@emotion/styled";
 import { IdSelect } from '../../../components/components';
-import { useData } from '../../../hooks';
-import { TaskType } from '../../../types/task';
 export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
     const {data:allTasks} = useTasks(useTaskSearchParams())
     const tasks = allTasks?.filter(task=>task.kanbanId === signboard.id)

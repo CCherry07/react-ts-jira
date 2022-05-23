@@ -1,6 +1,6 @@
 import { Input , Button } from 'antd'
 import { Row, UserSelect } from '../../components/components'
-import { useDebounce, useSetUrlSearchParam } from '../../hooks'
+import { useSetUrlSearchParam } from '../../hooks'
 import { useTaskSearchParams } from './epic/taskHooks'
 import { TaskSelect } from './signboard/components'
 export const SearchPanel = ()=>{
@@ -9,10 +9,10 @@ export const SearchPanel = ()=>{
   
   const rest=()=>{
     setSearchParams({
-      name:undefined,
-      typeId:undefined,
-      processorId:undefined,
-      tagId:undefined
+      name:"",
+      typeId:"",
+      processorId:"",
+      tagId:""
     })
   }
 
