@@ -74,8 +74,7 @@ export const useDeleteUpdate = (queryKey:QueryKey)=>
 export const useEditUpdate = (queryKey:QueryKey)=>
         useConfig(queryKey,(target,old)=>old?.map(item=>item.id === target.id?{...item
         ,...target}:item)||[])
-export const useAddUpdate = (queryKey:QueryKey)=>
-        useConfig(queryKey,(target,old)=>old?[...old,target] : [])
+export const useAddUpdate = (queryKey:QueryKey)=>useConfig(queryKey,(target,old)=>old?[...old,target] : [])
 
 // 使用usequery
 export const useAddProjectWithQuery = (queryKey:QueryKey)=>{
