@@ -5,7 +5,9 @@ import { useQueryParam } from "../../../hooks";
 import { useHttp } from "../../../hooks/https";
 import { Signboard } from "../../../types/signboard";
 import { Task } from "../../../types/task";
+import { reorder } from "../../../utils/reorder";
 import { useProject } from "../../project-list/projectHooks";
+
 
 
 export const useSignboards = (param?:Partial<Signboard>)=>{
@@ -130,3 +132,50 @@ export const useEditUpdate = (queryKey:QueryKey)=>
         useConfig(queryKey,(target,old)=>old?.map(item=>item.id === target.id?{...item
         ,...target}:item)||[])
 export const useAddUpdate = (queryKey:QueryKey)=>useConfig(queryKey,(target,old)=>old?[...old,target] : [])
+
+
+export interface SortProps {
+  //当前item
+  fromId:number
+  //目标位置item
+  referenceId:number
+  //前或后
+  type:"before"|"after"
+  formKanbanId?:number
+  toKanbanId?:number
+}
+export const useReorderSignboards = (queryKey:QueryKey)=>{
+  const client = useHttp()
+  return useMutation(
+    (params:SortProps)=>{
+      return client("kanbans/reorder",{
+        method:"POST",
+        data:params
+      })
+    },
+    useReorderKanbanConfig(queryKey)
+)}
+
+export const useReorderTasks = (queryKey:QueryKey)=>{
+  const client = useHttp()
+  return useMutation((params:SortProps)=>{
+      return client("tasks/reorder",{
+        method:"POST",
+        data:params
+      })
+    },
+    useReorderTaskConfig(queryKey)
+)}
+
+export const useReorderKanbanConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => reorder({ list: old, ...target }));
+
+export const useReorderTaskConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => {
+    const orderedList = reorder({ list: old, ...target }) as Task[];
+    return orderedList.map((item) =>
+      item.id === target.fromId
+        ? { ...item, kanbanId: target.toKanbanId }
+        : item
+    );
+  });

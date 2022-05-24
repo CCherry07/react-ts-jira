@@ -21,10 +21,10 @@ export const SignboardColumn = React.forwardRef<HTMLDivElement,{signboard:Signbo
         <SignboardControl signboard={signboard}></SignboardControl>
       </Row>
         <TaskContainer>
-        <Drop type='Row' direction='vertical' droppableId={"signboard"+signboard.id}>
+        <Drop type='ROW' direction='vertical' droppableId={String(signboard.id)}>
           <DropChild>
             {tasks?.map((task,taskIdx)=>(
-                <Drag key={task.id} index={taskIdx} draggableId={"task"+task.id}>
+                <Drag key={task.id} index={taskIdx} draggableId={task.id+""}>
                   <div>
                   <TaskCard task={task}></TaskCard>
                   </div>

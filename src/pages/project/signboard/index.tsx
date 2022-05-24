@@ -2,13 +2,14 @@ import styled from '@emotion/styled'
 import { Spin } from 'antd'
 import React from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { PageContainer, Row } from "../../../components/components"
+import { PageContainer} from "../../../components/components"
 import { useDocTitle } from "../../../hooks"
 import { Signboard } from "../../../types/signboard"
 import { useTasks, useTaskSearchParams } from "../epic/taskHooks"
 import { SearchPanel } from "../searchPanel"
-import { CreateSignboard, SignboardColumn, TaskContainer, TaskModal } from "./components"
+import { CreateSignboard, SignboardColumn, TaskModal } from "./components"
 import { Drag, Drop, DropChild } from './Dragdrop'
+import { useDragEnd } from './DragdropHooks'
 import { useProjectById, useSignboards, useSignboardSearchParams } from "./signboardHooks"
 
 export const PageSignboard=()=>{
@@ -17,9 +18,9 @@ export const PageSignboard=()=>{
   const { data:currentProject } = useProjectById()
   const { isLoading:taskIsLoading  } = useTasks(useTaskSearchParams())
   const isLoading = signboardsIsloading || taskIsLoading
-
+  const onDropEnd = useDragEnd()
   return (
-    <DragDropContext onDragEnd={()=>{}}>
+    <DragDropContext onDragEnd={onDropEnd}>
        <PageContainer> 
         <h1>{currentProject?.name} 看板 </h1>
         <SearchPanel></SearchPanel>

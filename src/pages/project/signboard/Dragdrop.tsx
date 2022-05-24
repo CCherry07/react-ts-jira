@@ -21,7 +21,6 @@ type DropChildProps = Partial<{
   provided:DroppableProvided
 } & DroppableProvidedProps & React.HTMLAttributes<HTMLDivElement>>
 export const DropChild = React.forwardRef<HTMLDivElement,DropChildProps>(({children,...props} , ref)=>{
-  console.log(ref , 123);
   return <div ref={ref} {...props}>
   {children}
    {props.provided?.placeholder}
