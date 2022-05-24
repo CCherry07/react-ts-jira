@@ -5,7 +5,7 @@ import { DragDropContext } from 'react-beautiful-dnd'
 import { PageContainer} from "../../../components/components"
 import { useDocTitle } from "../../../hooks"
 import { Signboard } from "../../../types/signboard"
-import { useTasks, useTaskSearchParams } from "../epic/taskHooks"
+import { useTasks, useTaskSearchParams } from "./taskHooks"
 import { SearchPanel } from "../searchPanel"
 import { CreateSignboard, SignboardColumn, TaskModal } from "./components"
 import { Drag, Drop, DropChild } from './Dragdrop'

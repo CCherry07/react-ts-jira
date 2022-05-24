@@ -1,7 +1,7 @@
 import { Input , Button } from 'antd'
 import { Row, UserSelect } from '../../components/components'
 import { useSetUrlSearchParam } from '../../hooks'
-import { useTaskSearchParams } from './epic/taskHooks'
+import { useTaskSearchParams } from './signboard/taskHooks'
 import { TaskSelect } from './signboard/components'
 export const SearchPanel = ()=>{
   const searchParams  = useTaskSearchParams()

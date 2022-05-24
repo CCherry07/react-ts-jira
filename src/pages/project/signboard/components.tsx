@@ -1,7 +1,7 @@
 import { Card ,Menu, Input ,Form, Modal , Dropdown,Button} from 'antd'
 import {useForm} from 'antd/es/form/Form'
 import { Signboard } from "../../../types/signboard";
-import { useTaskQueryKey, useTasks, useTaskSearchParams, useTaskTypes } from "../epic/taskHooks";
+import { useTaskQueryKey, useTasks, useTaskSearchParams, useTaskTypes } from "./taskHooks";
 import taskIcon from '../../../assets/task.svg'
 import bugIcon from '../../../assets/bug.svg'
 import styled from "@emotion/styled";
@@ -22,9 +22,9 @@ export const SignboardColumn = React.forwardRef<HTMLDivElement,{signboard:Signbo
       </Row>
         <TaskContainer>
         <Drop type='ROW' direction='vertical' droppableId={String(signboard.id)}>
-          <DropChild>
+          <DropChild style={{minHeight:"1px"}} >
             {tasks?.map((task,taskIdx)=>(
-                <Drag key={task.id} index={taskIdx} draggableId={task.id+""}>
+                <Drag key={task.id} index={taskIdx} draggableId={"task" + task.id}>
                   <div>
                   <TaskCard task={task}></TaskCard>
                   </div>
@@ -32,7 +32,7 @@ export const SignboardColumn = React.forwardRef<HTMLDivElement,{signboard:Signbo
             ))}
           </DropChild>
         </Drop>
-       <CreateTask kanbanId={signboard.id}></CreateTask>
+        <CreateTask kanbanId={signboard.id}/>
        </TaskContainer>
     </Container>
   )

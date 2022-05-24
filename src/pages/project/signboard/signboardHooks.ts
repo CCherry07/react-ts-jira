@@ -116,6 +116,7 @@ export const useConfig = (queryKey:QueryKey, callback:(target:any,old?:any[])=>a
     onSuccess:()=>queryClient.invalidateQueries(queryKey[0] as string),
     async onMutate(target:any){
       const previousItems = queryClient.getQueriesData(queryKey)
+      console.log(previousItems);
       queryClient.setQueryData(queryKey,(old?:any[])=>{
         return callback(target , old)
       })
@@ -153,7 +154,7 @@ export const useReorderSignboards = (queryKey:QueryKey)=>{
         data:params
       })
     },
-    useReorderKanbanConfig(queryKey)
+    useReorderSignboardsConfig(queryKey)
 )}
 
 export const useReorderTasks = (queryKey:QueryKey)=>{
@@ -164,13 +165,13 @@ export const useReorderTasks = (queryKey:QueryKey)=>{
         data:params
       })
     },
-    useReorderTaskConfig(queryKey)
+    useReorderTasksConfig(queryKey)
 )}
 
-export const useReorderKanbanConfig = (queryKey: QueryKey) =>
+export const useReorderSignboardsConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => reorder({ list: old, ...target }));
 
-export const useReorderTaskConfig = (queryKey: QueryKey) =>
+export const useReorderTasksConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => {
     const orderedList = reorder({ list: old, ...target }) as Task[];
     return orderedList.map((item) =>

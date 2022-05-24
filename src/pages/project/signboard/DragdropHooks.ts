@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { DropResult } from "react-beautiful-dnd"
-import { useTaskQueryKey, useTasks, useTaskSearchParams } from "../epic/taskHooks"
+import { useTaskQueryKey, useTasks, useTaskSearchParams } from "./taskHooks"
 import { useReorderSignboards, useReorderTasks, useSignboardQueryKey, useSignboards } from "./signboardHooks"
 
 export const useDragEnd = ()=>{
@@ -20,7 +20,6 @@ export const useDragEnd = ()=>{
     if (type==="ROW") {
       const formSignboardId  = Number(source.droppableId)
       const toSignboardId = Number(destination.droppableId)
-      if (formSignboardId === toSignboardId) return
       const fromtask =  allTasks?.filter(task=>task.kanbanId === formSignboardId)[source.index]
       const toTask = allTasks?.filter(task=>task.kanbanId === toSignboardId)[destination.index]
       if (!fromtask || !toTask || fromtask?.id === toTask?.id) return
