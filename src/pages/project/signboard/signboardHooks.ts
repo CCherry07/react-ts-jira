@@ -90,8 +90,6 @@ export const useTask = (id:number)=>{
 export const useTaskModal = ()=>{
   const [{editingTaskId} , setEditingTaskId] = useQueryParam(["editingTaskId"])
   const {data:editingTask , isLoading} = useTask(Number(editingTaskId))
-  console.log(editingTask);
-  
   const startEdit = useCallback((id:number)=>{
     setEditingTaskId({editingTaskId:id})
   },[setEditingTaskId])
@@ -116,7 +114,6 @@ export const useConfig = (queryKey:QueryKey, callback:(target:any,old?:any[])=>a
     onSuccess:()=>queryClient.invalidateQueries(queryKey[0] as string),
     async onMutate(target:any){
       const previousItems = queryClient.getQueriesData(queryKey)
-      console.log(previousItems);
       queryClient.setQueryData(queryKey,(old?:any[])=>{
         return callback(target , old)
       })

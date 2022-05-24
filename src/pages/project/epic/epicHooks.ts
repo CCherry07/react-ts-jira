@@ -1,4 +1,3 @@
-
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { useHttp } from "../../../hooks/https";
 import { Task } from "../../../types/task";
@@ -46,10 +45,10 @@ return useMutation(
 export const useEditEpic = (queryKey:QueryKey)=>{
 const client = useHttp()
 return useMutation(
-  (params:Partial<Task>)=>client(`tasks/${params.id}`,{
-    method:"PATCH",
-    data:params
-  }),
-  useEditUpdate(queryKey)
-)
+    (params:Partial<Task>)=>client(`tasks/${params.id}`,{
+      method:"PATCH",
+      data:params
+    }),
+    useEditUpdate(queryKey)
+  )
 }
