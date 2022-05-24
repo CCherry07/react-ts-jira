@@ -34,6 +34,15 @@ export const useAddSignboard = (queryKey:QueryKey)=>{
       useAddUpdate(queryKey)  
     )
 }
+export const useDeleteSignboard = (queryKey:QueryKey)=>{
+  const client = useHttp()
+  return useMutation(
+    ({id}:{id:number})=>client(`kanbans/${id}`,{
+      method:"DELETE",
+    }),
+    useDeleteUpdate(queryKey)
+  )
+}
 
 export const useAddTask = (queryKey:QueryKey)=>{
   const client = useHttp()
@@ -45,8 +54,16 @@ export const useAddTask = (queryKey:QueryKey)=>{
     useAddUpdate(queryKey)  
   )
 }
-
-export const useEditTaskWithQuery = (queryKey:QueryKey)=>{
+export const useDeleteTask = (queryKey:QueryKey)=>{
+  const client = useHttp()
+  return useMutation(
+    ({id}:{id:number})=>client(`tasks/${id}`,{
+      method:"DELETE",
+    }),
+    useDeleteUpdate(queryKey)
+  )
+}
+export const useEditTask = (queryKey:QueryKey)=>{
   const client = useHttp()
   return useMutation(
     (params:Partial<Task>)=>client(`tasks/${params.id}`,{

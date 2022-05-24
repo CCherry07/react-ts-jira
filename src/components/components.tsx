@@ -133,7 +133,7 @@ export const Mark = ({target,keyword}:{target:string , keyword?:string})=>{
         <span key={index}>
           {str}
           {
-            index == stringSlices.length - 1 ? null:
+            index === stringSlices.length - 1 ? null:
              (<span style={{color:"#4382f7"}}>
               { keyword }
             </span>)

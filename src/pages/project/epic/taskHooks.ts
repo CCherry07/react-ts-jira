@@ -15,7 +15,7 @@ export const useTasks = (param?:Partial<Task>)=>{
 export const useTaskById = ()=>useProject(useProjectIdInUrl())
 
 export const useTaskSearchParams =()=>{
-  const [ param , setParam ] = useQueryParam(["name","typeId","processorId","tagId"])
+  const [ param ] = useQueryParam(["name","typeId","processorId","tagId"])
   const projectId = useProjectIdInUrl()
   const taskName = useDebounce(param.name , 300)
   return useMemo(()=>({

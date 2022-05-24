@@ -1,21 +1,23 @@
-import { Card , Input ,Form, Modal} from 'antd'
+import { Card ,Menu, Input ,Form, Modal , Dropdown,Button} from 'antd'
 import {useForm} from 'antd/es/form/Form'
 import { Signboard } from "../../../types/signboard";
 import { useTaskQueryKey, useTasks, useTaskSearchParams, useTaskTypes } from "../epic/taskHooks";
 import taskIcon from '../../../assets/task.svg'
 import bugIcon from '../../../assets/bug.svg'
 import styled from "@emotion/styled";
-import { IdSelect, UserSelect } from '../../../components/components';
+import { IdSelect, Mark, Row, UserSelect } from '../../../components/components';
 import { useEffect, useState } from 'react';
-import { useAddSignboard, useAddTask, useEditTaskWithQuery, useProjectIdInUrl, useSignboardQueryKey, useTaskModal } from './signboardHooks';
+import { useAddSignboard, useAddTask, useDeleteSignboard, useDeleteTask, useEditTask, useProjectIdInUrl, useSignboardQueryKey, useTaskModal } from './signboardHooks';
 import { Task } from '../../../types/task';
 export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
     const {data:allTasks} = useTasks(useTaskSearchParams())
     const tasks = allTasks?.filter(task=>task.kanbanId === signboard.id)
-
     return (
       <Container>
+        <Row>
           <h3> { signboard.name } </h3>
+          <SignboardControl signboard={signboard}></SignboardControl>
+        </Row>
           <TaskContainer>
           {tasks?.map(task=>(
             <TaskCard task={task}></TaskCard>
@@ -28,11 +30,12 @@ export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
 
 const TaskCard = ({task}:{task:Task})=>{
   const {startEdit} = useTaskModal()
+  const {name:keyword} = useTaskSearchParams()
   return (
     <Card onClick={()=>startEdit(task.id)} style={{marginBottom:".5rem" , borderRadius:"10px" , cursor:"pointer"}}>
-    <div>
-    {task.name}
-    </div>
+    <h4>
+    <Mark target={task.name} keyword={keyword}></Mark>
+    </h4>
     <TaskTypeIcon id={task.typeId}></TaskTypeIcon>
   </Card>
   )
@@ -42,7 +45,7 @@ const TaskTypeIcon = ({id}:{id:number})=>{
   const {data:taskTypes} = useTaskTypes()
   const name = taskTypes?.find(taskType=>taskType.id === id)?.name
   if (!name) return null
-  return <img width={"17rem"} src={name === "task" ? taskIcon : bugIcon}></img>
+  return <img alt={"taskType Icon"} width={"17rem"} src={name === "task" ? taskIcon : bugIcon}></img>
 }
 
 
@@ -131,13 +134,27 @@ const layout = {
 export const TaskModal = ()=>{
   const [form] = useForm()
   const {editingTaskId , editingTask , close} = useTaskModal()
-  const { mutateAsync: editTask , isLoading:editLoading} = useEditTaskWithQuery(editingTaskId)
+  const { mutateAsync: editTask , isLoading:editLoading} = useEditTask(editingTaskId)
+  const{mutateAsync:delTask} = useDeleteTask(useTaskQueryKey())
   const onCancel = () =>{
     close()
     form.resetFields()
   }
   const onOK = async ()=>{
     await editTask({...editingTask,...form.getFieldsValue()})
+    close()
+  }
+
+  const startDelTask = (task?:Task)=>{
+    if (!task) return
+    Modal.confirm({
+      okText:"确定",
+      cancelText:"取消",
+      title:<Mark target={`确定删除${task.name}任务吗？`} keyword={task.name}></Mark>,
+      onOk(){
+        delTask({id:task.id})
+      }
+    })
     close()
   }
 
@@ -164,6 +181,31 @@ export const TaskModal = ()=>{
           <TaskSelect defaultValue={"task"}></TaskSelect>
       </Form.Item>
     </Form>
+    <div style={{textAlign:"right"}}>
+      <Button onClick={()=>startDelTask(editingTask)} size='middle' danger>Delete</Button>
+    </div>
   </Modal>
 }
 
+
+export const SignboardControl = ({signboard}:{signboard:Signboard})=>{
+  const {mutateAsync} = useDeleteSignboard(useSignboardQueryKey())
+  const StartDel = ()=>{
+    Modal.confirm({
+      okText:"确定",
+      cancelText:"取消",
+      title:<Mark target={`确定删除${signboard.name}看板吗？`} keyword={signboard.name}></Mark>,
+      onOk(){
+        mutateAsync({id:signboard.id})
+      }
+    })
+  }
+  const Overlay = (<Menu>
+    <Menu.Item>
+      <Button type='link' onClick={StartDel} >删除</Button>
+    </Menu.Item>
+  </Menu>)
+  return (<Dropdown overlay={Overlay}>
+    <Button type='link' style={{padding:0,border:0,display:'flex'}}>...</Button>
+  </Dropdown>)
+}
