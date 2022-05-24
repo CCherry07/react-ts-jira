@@ -3,9 +3,6 @@ import { useData } from '../hooks';
 
 import { useProjectsModal } from './project-list/projectHooks';
 import { projectType } from './project-list/type';
-interface ProjectPopoverProps{
-
-}
 export const ProjectPopover = ()=>{
   const {open} = useProjectsModal()
   const {data:projects} = useData<projectType[]>({remainingUrl:"projects"})

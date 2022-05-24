@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-// import qs from "qs"
-// import {http} from "../hooks/https"
 import {clearObject, subset} from '../utils'
 import { URLSearchParamsInit, useSearchParams } from "react-router-dom"
 import { useHttp } from "./https"
