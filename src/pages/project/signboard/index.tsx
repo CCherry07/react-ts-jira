@@ -1,11 +1,14 @@
 import styled from '@emotion/styled'
 import { Spin } from 'antd'
+import React from 'react'
+import { DragDropContext } from 'react-beautiful-dnd'
 import { PageContainer, Row } from "../../../components/components"
 import { useDocTitle } from "../../../hooks"
 import { Signboard } from "../../../types/signboard"
 import { useTasks, useTaskSearchParams } from "../epic/taskHooks"
 import { SearchPanel } from "../searchPanel"
 import { CreateSignboard, SignboardColumn, TaskContainer, TaskModal } from "./components"
+import { Drag, Drop, DropChild } from './Dragdrop'
 import { useProjectById, useSignboards, useSignboardSearchParams } from "./signboardHooks"
 
 export const PageSignboard=()=>{
@@ -16,26 +19,37 @@ export const PageSignboard=()=>{
   const isLoading = signboardsIsloading || taskIsLoading
 
   return (
-   <PageContainer> 
-     <h1>{currentProject?.name} 看板 </h1>
-     <SearchPanel></SearchPanel>
-      { isLoading ? <Spin size='large'></Spin> : <TaskMain signboards={signboards}></TaskMain> }
-    <TaskModal></TaskModal>
-   </PageContainer>
+    <DragDropContext onDragEnd={()=>{}}>
+       <PageContainer> 
+        <h1>{currentProject?.name} 看板 </h1>
+        <SearchPanel></SearchPanel>
+        { isLoading ? <Spin size='large'></Spin> : 
+          <TaskMain signboards={signboards}></TaskMain>
+        }
+        <TaskModal></TaskModal>
+      </PageContainer>
+   </DragDropContext>
   )
 }
 
-const TaskMain = ({signboards}:{signboards?:Signboard[]})=>{
+const TaskMain = React.forwardRef<HTMLDivElement,{signboards?:Signboard[]}>(({signboards,...props},ref)=>{
   return(
-    <ColumnsContainer>
-      {
-        signboards?.map(signboard=>(
-          <SignboardColumn signboard={signboard} key={signboard.id}></SignboardColumn>
-        ))
-      }
+    <ColumnsContainer {...props} ref={ref}>
+      <Drop droppableId='signboard' type='COLUMN' direction='horizontal'>
+        <DropChild style={{display:"flex"}}>
+          {
+            signboards?.map((signboard,index)=>(
+              <Drag key={signboard.id} draggableId={"signboard"+ signboard.id} index={index}>
+              <SignboardColumn signboard={signboard} key={signboard.id}></SignboardColumn>
+              </Drag>
+            ))
+          }
+        </DropChild>
+      </Drop>
       <CreateSignboard></CreateSignboard>
-    </ColumnsContainer>)
-}
+    </ColumnsContainer>
+  )
+})
 
 export const ColumnsContainer = styled("div")`
   border-radius: 10px;

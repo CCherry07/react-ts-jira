@@ -6,27 +6,37 @@ import taskIcon from '../../../assets/task.svg'
 import bugIcon from '../../../assets/bug.svg'
 import styled from "@emotion/styled";
 import { IdSelect, Mark, Row, UserSelect } from '../../../components/components';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAddSignboard, useAddTask, useDeleteSignboard, useDeleteTask, useEditTask, useProjectIdInUrl, useSignboardQueryKey, useTaskModal } from './signboardHooks';
 import { Task } from '../../../types/task';
-export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
-    const {data:allTasks} = useTasks(useTaskSearchParams())
-    const tasks = allTasks?.filter(task=>task.kanbanId === signboard.id)
-    return (
-      <Container>
-        <Row>
-          <h3> { signboard.name } </h3>
-          <SignboardControl signboard={signboard}></SignboardControl>
-        </Row>
-          <TaskContainer>
-          {tasks?.map(task=>(
-            <TaskCard task={task}></TaskCard>
-         ))}
-         <CreateTask kanbanId={signboard.id}></CreateTask>
-         </TaskContainer>
-      </Container>
-    )
-} 
+import { Drag, Drop, DropChild } from './Dragdrop';
+export const SignboardColumn = React.forwardRef<HTMLDivElement,{signboard:Signboard}>(
+  ({signboard,...props},ref)=>{
+  const {data:allTasks} = useTasks(useTaskSearchParams())
+  const tasks = allTasks?.filter(task=>task.kanbanId === signboard.id)
+  return (
+    <Container {...props} ref={ref}>
+      <Row>
+        <h3> { signboard.name } </h3>
+        <SignboardControl signboard={signboard}></SignboardControl>
+      </Row>
+        <TaskContainer>
+        <Drop type='Row' direction='vertical' droppableId={"signboard"+signboard.id}>
+          <DropChild>
+            {tasks?.map((task,taskIdx)=>(
+                <Drag key={task.id} index={taskIdx} draggableId={"task"+task.id}>
+                  <div>
+                  <TaskCard task={task}></TaskCard>
+                  </div>
+                </Drag>
+            ))}
+          </DropChild>
+        </Drop>
+       <CreateTask kanbanId={signboard.id}></CreateTask>
+       </TaskContainer>
+    </Container>
+  )
+})
 
 const TaskCard = ({task}:{task:Task})=>{
   const {startEdit} = useTaskModal()
@@ -61,6 +71,7 @@ export const Container = styled.div`
 export const TaskContainer = styled.div`
   overflow: scroll;
   flex:1;
+  border-radius:10px ;
   ::-webkit-scrollbar{
     display:none;
   }
@@ -84,7 +95,7 @@ export const CreateSignboard=()=>{
 
   return (
     <Container>
-        <Input size='large' placeholder='新建看板名称'
+        <Input style={{borderRadius:"6px"}} size='middle' placeholder='新建看板名称'
           onPressEnter={submit}
           value={name}
           onChange={evt=>setName(evt.target.value)}
@@ -202,10 +213,10 @@ export const SignboardControl = ({signboard}:{signboard:Signboard})=>{
   }
   const Overlay = (<Menu>
     <Menu.Item>
-      <Button type='link' onClick={StartDel} >删除</Button>
+      <Button style={{padding:0,border:0}} danger type='link' onClick={StartDel} >删除</Button>
     </Menu.Item>
   </Menu>)
   return (<Dropdown overlay={Overlay}>
-    <Button type='link' style={{padding:0,border:0,display:'flex'}}>...</Button>
+    <Button type='link' danger style={{padding:0,border:0,display:'flex',color:"red"}}>...</Button>
   </Dropdown>)
 }
