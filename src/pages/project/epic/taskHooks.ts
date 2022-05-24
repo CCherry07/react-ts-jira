@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "react-query";
-import { useQueryParam } from "../../../hooks";
+import { useDebounce, useQueryParam } from "../../../hooks";
 import { useHttp } from "../../../hooks/https";
 import { Task, TaskType } from "../../../types/task";
 import { useProject } from "../../project-list/projectHooks";
@@ -17,13 +17,14 @@ export const useTaskById = ()=>useProject(useProjectIdInUrl())
 export const useTaskSearchParams =()=>{
   const [ param , setParam ] = useQueryParam(["name","typeId","processorId","tagId"])
   const projectId = useProjectIdInUrl()
+  const taskName = useDebounce(param.name , 300)
   return useMemo(()=>({
     projectId,
-    name:param.name,
+    name:taskName,
     typeId:Number(param.typeId) || undefined,
     processorId:Number(param.processorId) || undefined,
     tagId:Number(param.tagId) || undefined
-  }),[projectId,param])
+  }),[projectId,param,taskName])
 }
 
 export const useTaskQueryKey = ()=>["tasks",useTaskSearchParams()]

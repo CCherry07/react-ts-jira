@@ -8,21 +8,17 @@ import styled from "@emotion/styled";
 import { IdSelect, UserSelect } from '../../../components/components';
 import { useEffect, useState } from 'react';
 import { useAddSignboard, useAddTask, useEditTaskWithQuery, useProjectIdInUrl, useSignboardQueryKey, useTaskModal } from './signboardHooks';
+import { Task } from '../../../types/task';
 export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
     const {data:allTasks} = useTasks(useTaskSearchParams())
     const tasks = allTasks?.filter(task=>task.kanbanId === signboard.id)
-    const {startEdit} = useTaskModal()
+
     return (
       <Container>
           <h3> { signboard.name } </h3>
           <TaskContainer>
           {tasks?.map(task=>(
-            <Card onClick={()=>startEdit(task.id)} style={{marginBottom:".5rem" , borderRadius:"10px" , cursor:"pointer"}}>
-              <div>
-              {task.name}
-              </div>
-              <TaskTypeIcon id={task.typeId}></TaskTypeIcon>
-            </Card>
+            <TaskCard task={task}></TaskCard>
          ))}
          <CreateTask kanbanId={signboard.id}></CreateTask>
          </TaskContainer>
@@ -30,6 +26,17 @@ export const SignboardColumn = ({signboard}:{signboard:Signboard})=>{
     )
 } 
 
+const TaskCard = ({task}:{task:Task})=>{
+  const {startEdit} = useTaskModal()
+  return (
+    <Card onClick={()=>startEdit(task.id)} style={{marginBottom:".5rem" , borderRadius:"10px" , cursor:"pointer"}}>
+    <div>
+    {task.name}
+    </div>
+    <TaskTypeIcon id={task.typeId}></TaskTypeIcon>
+  </Card>
+  )
+}
 
 const TaskTypeIcon = ({id}:{id:number})=>{
   const {data:taskTypes} = useTaskTypes()
@@ -138,7 +145,7 @@ export const TaskModal = ()=>{
     form.setFieldsValue(editingTask)
   },[form, editingTask])
 
-  return <Modal onCancel={onCancel} onOk={onOK} okText={"确认修改"} cancelText="取消修改"
+  return <Modal forceRender={true} onCancel={onCancel} onOk={onOK} okText={"确认修改"} cancelText="取消修改"
     confirmLoading={editLoading}
     title="编辑任务"
     visible={!!editingTaskId}
