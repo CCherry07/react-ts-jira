@@ -121,3 +121,25 @@ export const PageContainer = styled.div`
   display: flex;
   flex-direction:column;
 `
+
+
+export const Mark = ({target,keyword}:{target:string , keyword?:string})=>{
+  if (!keyword) return <>{target}</>
+  const stringSlices = target.split(keyword)
+   return (<>
+    { 
+      stringSlices.map(
+        (str,index)=>
+        <span key={index}>
+          {str}
+          {
+            index == stringSlices.length - 1 ? null:
+             (<span style={{color:"#4382f7"}}>
+              { keyword }
+            </span>)
+          }
+        </span>
+        )
+      }
+  </>)
+}
