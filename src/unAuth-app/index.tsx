@@ -1,5 +1,5 @@
 import React,{ useState } from 'react';
-import { LoginPage } from '../pages/login';
+import { LoginPage } from './login';
 import { RegisterPage } from './register'
 
 import { Card , Button , Divider,Typography} from 'antd'

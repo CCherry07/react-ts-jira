@@ -16,7 +16,8 @@ interface AuthContextValue {
   user:userType | null,
   login:(form: AuthForm) => Promise<void>,
   register:(form: AuthForm) => Promise<void>,
-  loginOut:()=>void
+  loginOut:()=>void,
+  isSuccess:boolean
 }
 
 const AuthContext = React.createContext<AuthContextValue | null>(null)
@@ -25,23 +26,21 @@ const initUser =async () => {
   const token = auth.getToken()
   if (token) {
     const {user} = await http("me" , { token } )
-    console.log(user);
-    
     return user
   }
 }
 
 AuthContext.displayName = "AuthContext"
-export const AuthProvider =( { children } : { children:ReactNode } )=>{
+export const AuthProvider =({ children } : { children:ReactNode } )=>{
   const queryClient = useQueryClient()
-  const { data:user , setData:setUser , run ,isError,isIdle ,isLoading ,error }  = useAsync<userType|null>()
-  // const [user , setUser] = useState<userType|null>(null)
-  const login = async (form:AuthForm ) => setUser(await auth.loginWithregister(form,"login"))
-  const register = async (form:AuthForm) => setUser(await auth.loginWithregister(form,"register"))
+  const { data:user, setData:setUser , run ,isError,isIdle ,isLoading ,error,isSuccess }  = useAsync<userType|null>()
+  const login = async (form:AuthForm ) =>setUser(await auth.loginWithregister(form,"login"))
+  const register = async (form:AuthForm) =>setUser(await auth.loginWithregister(form,"register"))
+
   const loginOut = ()=>{
-    auth.loginOut()
-    queryClient.clear()
     setUser(null)
+    // auth.loginOut()
+    queryClient.clear()
   }
   useMount(()=>{
     run(initUser())
@@ -52,9 +51,9 @@ export const AuthProvider =( { children } : { children:ReactNode } )=>{
   if (isError) {
     return <PullpageError error={error}></PullpageError>
   }
-  return <AuthContext.Provider  value={{user, login,loginOut , register}}  children={ children } ></AuthContext.Provider>
+  return <AuthContext.Provider  children={ children } value={{user,isSuccess,login,loginOut , register}} ></AuthContext.Provider>
 }
-export  const  useAuth = ()=>{
+export const useAuth = ()=>{
   const context = React.useContext(AuthContext)
   if (!context) {
     throw new Error(" useAuth 必须在 AuthProvider里使用 ")

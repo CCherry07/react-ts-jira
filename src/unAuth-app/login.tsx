@@ -1,7 +1,7 @@
-import { useAuth } from '../../context/auth-context'
+import { useAuth } from '../context/auth-context'
 import { Form  , Input} from 'antd'
-import {LongButton } from '../../unAuth-app'
-import { useAsync } from '../../hooks'
+import {LongButton } from '.'
+import { useAsync } from '../hooks'
 export const LoginPage =({onError}:{onError:(error:Error)=>void})=>{
   const {login } = useAuth()
   const { run,isLoading } = useAsync(undefined , { processErrorBySelf:true })
