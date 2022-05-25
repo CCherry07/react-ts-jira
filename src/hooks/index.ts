@@ -3,7 +3,7 @@ import {clearObject, subset} from '../utils'
 import { URLSearchParamsInit, useSearchParams } from "react-router-dom"
 import { useHttp } from "./https"
 import { useQuery } from "react-query"
-import { paramType, projectType } from "../pages/project-list/type"
+import { paramType, projectType, userType } from "../pages/project-list/type"
 
 export const useMount =(cb:()=>void)=>{
   useEffect(()=>{
@@ -112,10 +112,16 @@ export const useData = <T>(parameter:useDataParamType)=>{
    }
 }
 
-export const useProjects = (param:paramType)=>{
+export const useProjects = (param:Partial<paramType>)=>{
   const client = useHttp()
   return useQuery<projectType[]>(["projects",param],()=>{
     return client("projects",{data:param})
+  })
+}
+export const useUsers = (param?:Partial<userType>)=>{
+  const client = useHttp()
+  return useQuery<userType[]>(["users",param],()=>{
+    return client("users",{data:param})
   })
 }
 
