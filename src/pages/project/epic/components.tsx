@@ -2,13 +2,15 @@ import {Drawer,DrawerProps,Button ,Spin,Form , Input } from 'antd'
 import { useForm} from 'antd/es/form/Form'
 import { useEffect } from 'react'
 import { Row, ShowError, UserSelect } from '../../../components/components'
+import { useProjectIdInUrl } from '../signboard/signboardHooks'
 import { useAddEpic, useEpicQueryKey } from './epicHooks'
 
 export const CreateEpic=(props:Pick<DrawerProps , "visible">&{onClose:()=>void})=>{
   const {mutate:addEpic , isLoading,error } = useAddEpic(useEpicQueryKey())
+  const projectId= useProjectIdInUrl()
   const [form] = useForm()
   const onFinish = async(values:any)=>{
-    await addEpic(values)
+    await addEpic({...values,projectId})
     props.onClose()
   }
   useEffect(()=>{

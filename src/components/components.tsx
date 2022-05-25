@@ -123,7 +123,7 @@ export const PageContainer = styled.div`
 `
 
 
-export const Mark = ({target,keyword}:{target:string , keyword?:string})=>{
+export const Mark = ({target,keyword,color}:{target:string , keyword?:string,color?:string})=>{
   if (!keyword) return <>{target}</>
   const stringSlices = target.split(keyword)
    return (<>
@@ -134,7 +134,7 @@ export const Mark = ({target,keyword}:{target:string , keyword?:string})=>{
           {str}
           {
             index === stringSlices.length - 1 ? null:
-             (<span style={{color:"#4382f7"}}>
+             (<span style={{color: color || "#4382f7"}}>
               { keyword }
             </span>)
           }
