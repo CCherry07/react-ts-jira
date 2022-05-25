@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { List , Button ,Divider} from 'antd'
+import { List , Button ,Divider , Modal} from 'antd'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -8,7 +8,7 @@ import { Container } from '../signboard/components'
 import { useProjectById } from "../signboard/signboardHooks"
 import { useTasks } from '../signboard/taskHooks'
 import { CreateEpic } from './components'
-import { useDeleteEpic, useEpicQueryKey, useEpics, useEpicSearchParams } from "./epicHooks"
+import { Epic, useDeleteEpic, useEpicQueryKey, useEpics, useEpicSearchParams } from "./epicHooks"
 
 export const PageEpic=()=>{
   const { data:currentProject } = useProjectById()
@@ -16,6 +16,17 @@ export const PageEpic=()=>{
   const {data:tasks} = useTasks({projectId:currentProject?.id})
   const {mutate:deleteEpic} = useDeleteEpic(useEpicQueryKey())
   const [epicCreateOpen,setEpicCreateOpen] = useState(false)
+  const startDelEpic = (epic:Epic)=>{
+    if (!epic) return
+    Modal.confirm({
+      okText:"确定",
+      cancelText:"取消",
+      title:<Mark target={`确定删除${epic.name}任务吗？`} keyword={epic.name}></Mark>,
+      onOk(){
+        deleteEpic({id:epic.id})
+      }
+    })
+  }
   return (
     <PageContainer style={{width:"100vw"}}>
       <EpicContainer>
@@ -32,7 +43,7 @@ export const PageEpic=()=>{
             </Divider>}
           <List.Item.Meta title={<Row>
             <span> {epic.name}</span>
-            <Button danger type='link' onClick={()=>deleteEpic({id:epic.id})}>删除</Button>
+            <Button danger type='link' onClick={()=>startDelEpic(epic)}>删除</Button>
           </Row>} description={
             <div>
               <div>开始时间:{dayjs(epic.start).format("YYYY-MM-DD")}</div>
@@ -43,7 +54,6 @@ export const PageEpic=()=>{
           {tasks?.filter(task=>task.epicId === epic.id)
           .map(task=><Link to={`/projects/${currentProject?.id}/signboard?editingTaskId=${task.id}`} key={task.id}>{task.name}</Link>)}
           </Row>
-          
         </List.Item>
       )}
       >
