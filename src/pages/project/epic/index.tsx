@@ -1,9 +1,11 @@
 import { List , Button} from 'antd'
 import dayjs from 'dayjs'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageContainer, Row } from "../../../components/components"
 import { useProjectById } from "../signboard/signboardHooks"
 import { useTasks } from '../signboard/taskHooks'
+import { CreateEpic } from './components'
 import { useDeleteEpic, useEpicQueryKey, useEpics, useEpicSearchParams } from "./epicHooks"
 
 interface PageEpicProps{
@@ -14,9 +16,13 @@ export const PageEpic=(props:PageEpicProps)=>{
   const {data:epics} = useEpics(useEpicSearchParams())
   const {data:tasks} = useTasks({projectId:currentProject?.id})
   const {mutate:deleteEpic} = useDeleteEpic(useEpicQueryKey())
+  const [epicCreateOpen,setEpicCreateOpen] = useState(false)
   return (
-    <PageContainer>
+    <PageContainer style={{width:"100vw"}}>
+      <Row justifyContent='space-between'>
       <h1>{currentProject?.name} 任务组 </h1>
+      <Button onClick={()=>setEpicCreateOpen(true)} type="default"> 创建任务组 </Button>
+      </Row>
       <List dataSource={epics}      
       itemLayout={"vertical"}
       renderItem={(epic)=>(
@@ -33,12 +39,12 @@ export const PageEpic=(props:PageEpicProps)=>{
           <Row flexDirection='column'style={{alignItems:"flex-start"}}>
           {tasks?.filter(task=>task.epicId === epic.id)
           .map(task=><Link to={`/projects/${currentProject?.id}/signboard?editingTaskId=${task.id}`} key={task.id}>{task.name}</Link>)}
-
           </Row>
         </List.Item>
       )}
       >
       </List>
+      <CreateEpic visible={epicCreateOpen} onClose={()=>setEpicCreateOpen(false)}></CreateEpic>
     </PageContainer>
   )
 }
