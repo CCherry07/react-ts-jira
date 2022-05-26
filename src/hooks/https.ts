@@ -42,8 +42,6 @@ export const http = async (
         if (res.message.includes("用户名已存在")) {
           return {...res,message:"请登陆..."}
         }else{
-          console.log(res);
-          
           return res
         }
       }
