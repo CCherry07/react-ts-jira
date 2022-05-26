@@ -30,15 +30,20 @@ export const http = async (
     config.body = JSON.stringify(data || {});
   }
   // console.log(endpoint);
-  
   // axios 和 fetch 的表现不一样，axios可以直接在返回状态不为2xx的时候抛出异常
   return window
     .fetch(`${apiUrl}/${endpoint}`, config)
     .then(async (response) => {
       if (response.status === 401) {
-        await auth.loginOut();
         window.location.reload();
         return Promise.reject({ message: "请重新登录" });
+      }else if(response.status === 400){
+        const res = await response.json()
+        if (res.message.includes("用户名已存在")) {
+          return {...res,message:"请登陆..."}
+        }else{
+          return res
+        }
       }
       const data = await response.json();
       if (response.ok) {

@@ -1,7 +1,7 @@
 import {Drawer,DrawerProps,Button ,Spin,Form , Input } from 'antd'
 import { useForm} from 'antd/es/form/Form'
 import { useEffect } from 'react'
-import { Row, ShowError, UserSelect } from '../../../components/components'
+import { Row, ShowError} from '../../../components/components'
 import { useProjectIdInUrl } from '../signboard/signboardHooks'
 import { useAddEpic, useEpicQueryKey } from './epicHooks'
 

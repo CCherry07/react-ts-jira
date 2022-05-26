@@ -1,8 +1,6 @@
 import styled from "@emotion/styled"
-import React, { Dispatch, SetStateAction, useState } from 'react';
 import { BrowserRouter, Navigate, Route , Routes } from 'react-router-dom'
 import { Button ,Dropdown ,Menu} from 'antd'
-import { UnauthApp } from "./unAuth-app";
 import { useAuth } from './context/auth-context';
 import { ProjectListScreen } from "./pages/project-list"
 import { Row } from './components/components'
@@ -14,7 +12,7 @@ import { PageProjectModal } from "./pages/project-modal";
 import { ProjectPopover, UserPopover } from "./pages/components";
 
 
-export const AuthApp =()=>{
+export default ()=>{
   useDocTitle("项目列表",false)
   return (
     <Container>

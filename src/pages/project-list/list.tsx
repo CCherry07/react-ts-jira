@@ -63,7 +63,7 @@ export const  List =({ users, ...props }:ListProps) =>{
 const ControlDropdown = ({project}:{project:projectType})=>{
   const {startEdit} = useProjectsModal()
   const editProject =(id:number)=>()=>startEdit(id)
-  const { mutate:deleteProject } = useDeleteProjectWithQuery(useProjectsQueryKey())
+  const { mutate:deleteProject} = useDeleteProjectWithQuery(useProjectsQueryKey())
   const confirmDeleteProject = (id:number,projectName:string)=>{
     Modal.confirm({
       title:`确定要删除这个<${projectName}>项目吗？`,
