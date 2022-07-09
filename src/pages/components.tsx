@@ -12,7 +12,7 @@ export const ProjectPopover = ()=>{
     <List>
       {  
         pinnedProjects?.map(project=>(
-          <List.Item>
+          <List.Item key={project.id}>
             <List.Item.Meta title={project.name}></List.Item.Meta>
           </List.Item>
         ))
@@ -36,7 +36,7 @@ export const UserPopover = ()=>{
     <List>
       {
         users?.map(user=>(
-          <List.Item>
+          <List.Item key={user.id}>
             <List.Item.Meta title={user.name}></List.Item.Meta>
           </List.Item>
         ))

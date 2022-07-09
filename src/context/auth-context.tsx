@@ -39,7 +39,7 @@ export const AuthProvider =({ children } : { children:ReactNode } )=>{
 
   const loginOut = ()=>{
     setUser(null)
-    // auth.loginOut()
+    auth.logOut()
     queryClient.clear()
   }
   useMount(()=>{
