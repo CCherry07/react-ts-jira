@@ -6,7 +6,7 @@ import { useAuth } from './context/auth-context'
 const UnAuthApp = React.lazy(()=>import("./unAuth-app"))
 const AuthApp = React.lazy(()=>import("./authApp"))
 function App() {
-  const {user}  =useAuth()
+  const {user} =useAuth()
   return (
     <div className='App'>
       <ErrorBoundary fallBackRender={PullpageError}>

@@ -48,7 +48,7 @@ export const useAsync = <D>(initState?:State<D>,initConfig?:typeof defaultConfig
     data,
     status:"success",
     error:null
-  })  
+  })
   const setError = (error:Error) => setState({
     data:null,
     status:"error",

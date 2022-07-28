@@ -31,10 +31,6 @@ export default ()=>{
   )
 }
 
-interface PageHeaderProps{
-  
-}
-
 const PageHeader =()=>{
   const {loginOut , user} = useAuth()
   return(
@@ -88,12 +84,5 @@ const HeaderRight = styled.div`
 
 const Main = styled.main`grid-area:main;
 display:flex ;
-`
-const Aside = styled.aside`grid-area:aside`
-const Nav = styled.nav`grid-area:nav`
-const Footer = styled.footer`grid-area:footer`
-
-const PageMain = styled.main`
-  height: calc(100vh - 6rem);
 `
 

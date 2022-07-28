@@ -69,6 +69,7 @@ export const useConfig = (queryKey:QueryKey , callback:(target:any,old?:any[])=>
     }
   }
 }
+
 export const useDeleteUpdate = (queryKey:QueryKey)=>
         useConfig(queryKey,(target,old)=>old?.filter(item=>item.id !== target.id)||[])
 export const useEditUpdate = (queryKey:QueryKey)=>
