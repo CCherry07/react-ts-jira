@@ -15,7 +15,7 @@ export const resetRouter = ()=>{
 }
 
 export const subset = <
-  O extends { [key in string]: unknown },
+  O extends Record<string,unknown>,
   K extends keyof O
 >(
   obj: O,
