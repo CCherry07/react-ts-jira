@@ -6,8 +6,3 @@ import React from 'react';
 //     trackAllPureComponents: true,
 //   });
 // }
-
-
-const res:string = await (async function test(){
-  return await Promise.resolve("asda")
-})()

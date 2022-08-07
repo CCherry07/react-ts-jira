@@ -81,7 +81,6 @@ export const IdSelect = (props: IdSelectType) => {
 
 
 // UserSelect
-
 export const UserSelect = (props:Omit<React.ComponentProps<typeof IdSelect>,"options">)=>{
   const{data:users } = useData<userType[]>({ remainingUrl:"users"})
   return <IdSelect options={users || []} {...props}></IdSelect>
