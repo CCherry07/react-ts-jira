@@ -8,7 +8,7 @@ import { Row, ShowError, UserSelect } from '../../components/components'
 export  function PageProjectModal() {
   const {projectCreateOpen , close,editingProject,isLoading} = useProjectsModal()
   const title = editingProject ? editingProject.name : "创建项目"
-  useDocTitle(title)
+  useDocTitle(title,true)
   const useMutateProject = editingProject?useEditProjectWithQuery : useAddProjectWithQuery
   const { mutateAsync,error,isLoading:mutateLoading } = useMutateProject(useProjectsQueryKey())
   const [form] = useForm()
