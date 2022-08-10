@@ -7,29 +7,29 @@ import { useProject } from "../../project-list/projectHooks";
 import { useProjectIdInUrl } from "./signboardHooks";
 
 
-export const useTasks = (param?:Partial<Task>)=>{
+export const useTasks = (param?: Partial<Task>) => {
   const client = useHttp()
-  return useQuery<Task[]>(["tasks",param],()=>client("tasks",{data:param}))
+  return useQuery<Task[]>(["tasks", param], () => client("tasks", { data: param }))
 }
 
-export const useTaskById = ()=>useProject(useProjectIdInUrl())
+export const useTaskById = () => useProject(useProjectIdInUrl())
 
-export const useTaskSearchParams =()=>{
-  const [ param ] = useQueryParam(["name","typeId","processorId","tagId"])
+export const useTaskSearchParams = () => {
+  const [param] = useQueryParam(["name", "typeId", "processorId", "tagId"])
   const projectId = useProjectIdInUrl()
-  const taskName = useDebounce(param.name , 300)
-  return useMemo(()=>({
+  const taskName = useDebounce(param.name, 300)
+  return useMemo(() => ({
     projectId,
-    name:taskName,
-    typeId:Number(param.typeId) || undefined,
-    processorId:Number(param.processorId) || undefined,
-    tagId:Number(param.tagId) || undefined
-  }),[projectId,param,taskName])
+    name: taskName,
+    typeId: Number(param.typeId) || undefined,
+    processorId: Number(param.processorId) || undefined,
+    tagId: Number(param.tagId) || undefined
+  }), [projectId, param, taskName])
 }
 
-export const useTaskQueryKey = ()=>["tasks",useTaskSearchParams()]
+export const useTaskQueryKey = () => ["tasks", useTaskSearchParams()]
 
-export const useTaskTypes = ()=>{
+export const useTaskTypes = () => {
   const client = useHttp()
-  return useQuery<TaskType[]>(["taskTypes"],()=>client("taskTypes"))
+  return useQuery<TaskType[]>(["taskTypes"], () => client("taskTypes"))
 }
