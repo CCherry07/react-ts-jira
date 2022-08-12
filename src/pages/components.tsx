@@ -1,41 +1,40 @@
-import {Popover , Typography ,List   ,Button} from 'antd'
-import {useProjects, useUsers } from '../hooks';
+import { Popover, Typography, List, Button } from 'antd'
+import { useProjects, useUsers } from '../hooks';
 
-import {useProjectsModal, useProjectsSearchParams } from './project-list/projectHooks';
-export const ProjectPopover = ()=>{
-  const {open} = useProjectsModal()
-  // const {data:projects ,retry} = useData<projectType[]>({remainingUrl:"projects"})
-    const {data:projects , refetch} = useProjects(useProjectsSearchParams()[0])
+import { useProjectsModal, useProjectsSearchParams } from './project-list/projectHooks';
+export const ProjectPopover = () => {
+  const { open } = useProjectsModal()
+  const { data: projects, refetch } = useProjects(useProjectsSearchParams()[0])
   const pinnedProjects = projects?.filter(project => project.pin)
-  const content = (<div style={{width:"20rem"}}>
+  const content = (<div style={{ width: "20rem" }}>
     <Typography.Text type='secondary'>收藏项目</Typography.Text>
     <List>
-      {  
-        pinnedProjects?.map(project=>(
+      {
+        pinnedProjects?.map(project => (
           <List.Item key={project.id}>
             <List.Item.Meta title={project.name}></List.Item.Meta>
           </List.Item>
         ))
       }
-      <Button style={{padding:0}} type='link' onClick={()=>open()}> 创建项目 </Button>
+      <Button style={{ padding: 0 }} type='link' onClick={() => open()}> 创建项目 </Button>
     </List>
   </div>)
   return (
-    <Popover onVisibleChange={()=>refetch()} placement='bottom' content={content}>
-      <h3 style={{cursor:"pointer"}}> ITEMS </h3>
+    <Popover onVisibleChange={() => refetch()} placement='bottom' content={content}>
+      <h3 style={{ cursor: "pointer" }}> ITEMS </h3>
     </Popover>
   )
 }
 
 
-export const UserPopover = ()=>{
+export const UserPopover = () => {
   // const {data:projects ,retry} = useData<projectType[]>({remainingUrl:"projects"})
-    const {data:users , refetch} = useUsers()
-    const content = (<div style={{width:"20rem"}}>
+  const { data: users, refetch } = useUsers()
+  const content = (<div style={{ width: "20rem" }}>
     <Typography.Text type='secondary'>组员列表</Typography.Text>
     <List>
       {
-        users?.map(user=>(
+        users?.map(user => (
           <List.Item key={user.id}>
             <List.Item.Meta title={user.name}></List.Item.Meta>
           </List.Item>
@@ -44,8 +43,8 @@ export const UserPopover = ()=>{
     </List>
   </div>)
   return (
-    <Popover onVisibleChange={()=>refetch()} placement='bottom' content={content}>
-      <h3 style={{cursor:"pointer"}}> USERS </h3>
+    <Popover onVisibleChange={() => refetch()} placement='bottom' content={content}>
+      <h3 style={{ cursor: "pointer" }}> USERS </h3>
     </Popover>
   )
 }
