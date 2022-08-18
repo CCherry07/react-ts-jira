@@ -35,11 +35,11 @@ export const http = async (
       if (response.status === 401) {
         window.location.reload();
         return Promise.reject({ message: "请重新登录" });
-      }else if(response.status === 400){
+      } else if (response.status === 400) {
         const res = await response.json()
         if (res.message.includes("用户名已存在")) {
-          return {...res,message:"请登陆..."}
-        }else{
+          return { ...res, message: "请登陆..." }
+        } else {
           return res
         }
       }
