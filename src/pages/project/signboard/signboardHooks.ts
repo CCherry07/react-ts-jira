@@ -10,93 +10,93 @@ import { useProject } from "../../project-list/projectHooks";
 
 
 
-export const useSignboards = (param?:Partial<Signboard>)=>{
+export const useSignboards = (param?: Partial<Signboard>) => {
   const client = useHttp()
-  return useQuery<Signboard[]>(["kanbans",param],()=>client("kanbans",{data:param}))
+  return useQuery<Signboard[]>(["kanbans", param], () => client("kanbans", { data: param }))
 }
-export const useProjectIdInUrl = () =>{
-  const {pathname} = useLocation()
+export const useProjectIdInUrl = () => {
+  const { pathname } = useLocation()
   const id = pathname.match(/projects\/(\d+)/)?.[1]
   return Number(id)
 }
 
 
-export const useProjectById = ()=>useProject(useProjectIdInUrl())
-export const useSignboardSearchParams =()=>({projectId:useProjectIdInUrl()})
-export const useSignboardQueryKey = ()=>["kanbans",useSignboardSearchParams()]
+export const useProjectById = () => useProject(useProjectIdInUrl())
+export const useSignboardSearchParams = () => ({ projectId: useProjectIdInUrl() })
+export const useSignboardQueryKey = () => ["kanbans", useSignboardSearchParams()]
 
 
-export const useAddSignboard = (queryKey:QueryKey)=>{
-    const client = useHttp()
-    return useMutation(
-      (params:Partial<Signboard>)=>client("kanbans",{
-        method:"POST",
-        data:params
-      }),
-      useAddUpdate(queryKey)  
-    )
-}
-export const useDeleteSignboard = (queryKey:QueryKey)=>{
+export const useAddSignboard = (queryKey: QueryKey) => {
   const client = useHttp()
   return useMutation(
-    ({id}:{id:number})=>client(`kanbans/${id}`,{
-      method:"DELETE",
+    (params: Partial<Signboard>) => client("kanbans", {
+      method: "POST",
+      data: params
+    }),
+    useAddUpdate(queryKey)
+  )
+}
+export const useDeleteSignboard = (queryKey: QueryKey) => {
+  const client = useHttp()
+  return useMutation(
+    ({ id }: { id: number }) => client(`kanbans/${id}`, {
+      method: "DELETE",
     }),
     useDeleteUpdate(queryKey)
   )
 }
 
-export const useAddTask = (queryKey:QueryKey)=>{
+export const useAddTask = (queryKey: QueryKey) => {
   const client = useHttp()
   return useMutation(
-    (params:Partial<Task>)=>client("tasks",{
-      method:"POST",
-      data:params
+    (params: Partial<Task>) => client("tasks", {
+      method: "POST",
+      data: params
     }),
-    useAddUpdate(queryKey)  
+    useAddUpdate(queryKey)
   )
 }
-export const useDeleteTask = (queryKey:QueryKey)=>{
+export const useDeleteTask = (queryKey: QueryKey) => {
   const client = useHttp()
   return useMutation(
-    ({id}:{id:number})=>client(`tasks/${id}`,{
-      method:"DELETE",
+    ({ id }: { id: number }) => client(`tasks/${id}`, {
+      method: "DELETE",
     }),
     useDeleteUpdate(queryKey)
   )
 }
-export const useEditTask = (queryKey:QueryKey)=>{
+export const useEditTask = (queryKey: QueryKey) => {
   const client = useHttp()
   return useMutation(
-    (params:Partial<Task>)=>client(`tasks/${params.id}`,{
-      method:"PATCH",
-      data:params
+    (params: Partial<Task>) => client(`tasks/${params.id}`, {
+      method: "PATCH",
+      data: params
     }),
     useEditUpdate(queryKey)
   )
 }
 
-export const useTask = (id:number)=>{
+export const useTask = (id: number) => {
   const client = useHttp()
   return useQuery<Task>(
-    ["project",{id}],
-    ()=>client(`tasks/${id}`),
+    ["project", { id }],
+    () => client(`tasks/${id}`),
     {
-      enabled:!!id
+      enabled: !!id
     }
   )
 }
 
-export const useTaskModal = ()=>{
-  const [{editingTaskId} , setEditingTaskId] = useQueryParam(["editingTaskId"])
-  const {data:editingTask , isLoading} = useTask(Number(editingTaskId))
-  const startEdit = useCallback((id:number)=>{
-    setEditingTaskId({editingTaskId:id})
-  },[setEditingTaskId])
+export const useTaskModal = () => {
+  const [{ editingTaskId }, setEditingTaskId] = useQueryParam(["editingTaskId"])
+  const { data: editingTask, isLoading } = useTask(Number(editingTaskId))
+  const startEdit = useCallback((id: number) => {
+    setEditingTaskId({ editingTaskId: id })
+  }, [setEditingTaskId])
 
-  const close = useCallback(()=>{
-    setEditingTaskId({editingTaskId:""})
-  },[setEditingTaskId])
+  const close = useCallback(() => {
+    setEditingTaskId({ editingTaskId: "" })
+  }, [setEditingTaskId])
 
   return {
     editingTaskId,
@@ -108,62 +108,66 @@ export const useTaskModal = ()=>{
 
 }
 
-export const useConfig = (queryKey:QueryKey, callback:(target:any,old?:any[])=>any[])=>{
+export const useConfig = (queryKey: QueryKey, callback: (target: any, old?: any[]) => any[]) => {
   const queryClient = useQueryClient()
-  return{
-    onSuccess:()=>queryClient.invalidateQueries(queryKey[0] as string),
-    async onMutate(target:any){
+  return {
+    onSuccess: () => queryClient.invalidateQueries(queryKey[0] as string),
+    async onMutate(target: any) {
       const previousItems = queryClient.getQueriesData(queryKey)
-      queryClient.setQueryData(queryKey,(old?:any[])=>{
-        return callback(target , old)
+      queryClient.setQueryData(queryKey, (old?: any[]) => {
+        return callback(target, old)
       })
-      return{previousItems}
+      return { previousItems }
     },
-    onError(error:any,newItem:any,context:any){
-      queryClient.setQueryData(queryKey,(context as { previousItems:Signboard[]}).previousItems)
+    onError(error: any, newItem: any, context: any) {
+      queryClient.setQueryData(queryKey, (context as { previousItems: Signboard[] }).previousItems)
     }
   }
 }
-export const useDeleteUpdate = (queryKey:QueryKey)=>
-        useConfig(queryKey,(target,old)=>old?.filter(item=>item.id !== target.id)||[])
-export const useEditUpdate = (queryKey:QueryKey)=>
-        useConfig(queryKey,(target,old)=>old?.map(item=>item.id === target.id?{...item
-        ,...target}:item)||[])
-export const useAddUpdate = (queryKey:QueryKey)=>useConfig(queryKey,(target,old)=>old?[...old,target] : [])
+export const useDeleteUpdate = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => old?.filter(item => item.id !== target.id) || [])
+export const useEditUpdate = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => old?.map(item => item.id === target.id ? {
+    ...item
+    , ...target
+  } : item) || [])
+export const useAddUpdate = (queryKey: QueryKey) => useConfig(queryKey, (target, old) => old ? [...old, target] : [])
 
 
 export interface SortProps {
   //当前item
-  fromId:number
+  fromId: number
   //目标位置item
-  referenceId:number
+  referenceId: number
   //前或后
-  type:"before"|"after"
-  formKanbanId?:number
-  toKanbanId?:number
+  type: "before" | "after"
+  formKanbanId?: number
+  toKanbanId?: number
 }
-export const useReorderSignboards = (queryKey:QueryKey)=>{
+export const useReorderSignboards = (queryKey: QueryKey) => {
   const client = useHttp()
   return useMutation(
-    (params:SortProps)=>{
-      return client("kanbans/reorder",{
-        method:"POST",
-        data:params
+    (params: SortProps) => {
+      return client("kanbans/reorder", {
+        method: "POST",
+        data: params
       })
     },
     useReorderSignboardsConfig(queryKey)
-)}
+  )
+}
 
-export const useReorderTasks = (queryKey:QueryKey)=>{
+export const useReorderTasks = (queryKey: QueryKey) => {
   const client = useHttp()
-  return useMutation((params:SortProps)=>{
-      return client("tasks/reorder",{
-        method:"POST",
-        data:params
-      })
-    },
+  return useMutation((params: SortProps) => {
+    return client("tasks/reorder", {
+      method: "POST",
+      data: params
+    })
+  },
     useReorderTasksConfig(queryKey)
-)}
+  )
+}
 
 export const useReorderSignboardsConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => reorder({ list: old, ...target }));
