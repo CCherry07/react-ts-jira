@@ -1,18 +1,18 @@
-import { userType , projectType } from './type'
-import { Input , Form } from 'antd'
+import { userType, projectType } from './type'
+import { Input, Form } from 'antd'
 import { UserSelect } from '../../components/components';
-export interface propsType{
+export interface propsType {
   param: Partial<Pick<projectType, "name" | "personId">>;
-  users:userType[],
-  setParam:(params: Partial<{ name: unknown; personId: unknown; }>) => void
+  users: userType[],
+  setParam: (params: Partial<{ name: unknown; personId: unknown; }>) => void
 }
-export const SearchPanel =(props:propsType)=>{
-  const { param , setParam} = props
+export const SearchPanel = (props: propsType) => {
+  const { param, setParam } = props
   return (
-    <Form style={{marginBottom:"2rem" }} layout='inline'>
+    <Form style={{ marginBottom: "2rem" }} layout='inline'>
       <Form.Item>
-        <Input placeholder='项目名' type="text"  value={param.name} 
-        onChange={evt=>setParam({...param,name:evt.target.value})}></Input>
+        <Input placeholder='项目名' type="text" value={param.name}
+          onChange={evt => setParam({ ...param, name: evt.target.value })}></Input>
       </Form.Item>
       <Form.Item>
         <UserSelect
