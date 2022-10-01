@@ -12,7 +12,7 @@ import { PageProjectModal } from "./pages/project-modal";
 import { ProjectPopover, UserPopover } from "./pages/components";
 
 
-export default () => {
+export default function AuthApp() {
   useDocTitle("项目列表", false)
   return (
     <Container>
