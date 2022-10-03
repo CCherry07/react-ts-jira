@@ -1,30 +1,30 @@
 
-import { Spin , Typography ,Select , Rate} from 'antd';
+import { Spin, Typography, Select, Rate } from 'antd';
 import styled from "@emotion/styled";
 import { useData } from '../hooks';
 import React from 'react';
 import { userType } from '../pages/project-list/type';
 
 //Row
-type flexDirection = "row"|"row-reverse"|"column"|"column-reverse"
-type justifyContent ="normal"| "center" | "space-around"|"space-between"|"space-evenly"
-type alignItems = "center"|"normal"
-interface propsType{
-  flexDirection?:flexDirection
-  alignItems?:alignItems
-  justifyContent?:justifyContent
-  marginRight?:number
-  marginBottom?:number
+type flexDirection = "row" | "row-reverse" | "column" | "column-reverse"
+type justifyContent = "normal" | "center" | "space-around" | "space-between" | "space-evenly"
+type alignItems = "center" | "normal"
+interface propsType {
+  flexDirection?: flexDirection
+  alignItems?: alignItems
+  justifyContent?: justifyContent
+  marginRight?: number
+  marginBottom?: number
 }
 export const Row = styled.div<propsType>`
   display:flex;
-  flex-direction:${(props)=>props.flexDirection?props.flexDirection : "row"} ;
+  flex-direction:${(props) => props.flexDirection ? props.flexDirection : "row"} ;
   align-items: center;
-  justify-content: ${(props)=>props.justifyContent?props.justifyContent : "space-between"} ;
+  justify-content: ${(props) => props.justifyContent ? props.justifyContent : "space-between"} ;
   > * {
     margin: 0 0; 
-    margin-right: ${(props)=>props.marginRight?props.marginRight + "rem":0};
-    margin-bottom: ${(props)=>props.marginBottom?props.marginBottom + "rem":0};
+    margin-right: ${(props) => props.marginRight ? props.marginRight + "rem" : 0};
+    margin-bottom: ${(props) => props.marginBottom ? props.marginBottom + "rem" : 0};
   }
 `
 //PullpageError
@@ -35,13 +35,13 @@ const PullPage = styled.div`
   align-items:center ;
 `
 
-export const PullpageLoading = ()=>(
+export const PullpageLoading = () => (
   <PullPage>
     <Spin size='large'></Spin>
   </PullPage>
 )
 
-export const PullpageError=({error}:{error:Error | null})=>(
+export const PullpageError = ({ error }: { error: Error | null }) => (
   <PullPage>
     <Typography.Text type='danger'>{error?.message}</Typography.Text>
   </PullPage>
@@ -50,15 +50,15 @@ export const PullpageError=({error}:{error:Error | null})=>(
 // IdSelect
 type SelectProps = React.ComponentProps<typeof Select>
 
-interface IdSelectType extends Omit<SelectProps,"value"|"onChange"|"defaultOptionsName"|"options">{
+interface IdSelectType extends Omit<SelectProps, "value" | "onChange" | "defaultOptionsName" | "options"> {
 
-  value?:string|number|null|undefined
-  onChange?:(value?:number|string)=>void
-  defaultOptionName?:string
-  options:{name:string , id:number}[]
+  value?: string | number | null | undefined
+  onChange?: (value?: number | string) => void
+  defaultOptionName?: string
+  options: { name: string, id: number }[]
 }
 
-const toNumber = ( value:unknown)=> isNaN(Number(value)) ? 0 :Number(value)
+const toNumber = (value: unknown) => isNaN(Number(value)) ? 0 : Number(value)
 export const IdSelect = (props: IdSelectType) => {
   const { value, onChange, defaultOptionName, options, ...restProps } = props;
   return (
@@ -81,32 +81,32 @@ export const IdSelect = (props: IdSelectType) => {
 
 
 // UserSelect
-export const UserSelect = (props:Omit<React.ComponentProps<typeof IdSelect>,"options">)=>{
-  const{data:users } = useData<userType[]>({ remainingUrl:"users"})
+export const UserSelect = (props: Omit<React.ComponentProps<typeof IdSelect>, "options">) => {
+  const { data: users } = useData<userType[]>({ remainingUrl: "users" })
   return <IdSelect options={users || []} {...props}></IdSelect>
 }
 
 
 // Pin
-interface PinPros extends React.ComponentProps<typeof Rate>{
-  checked:boolean
-  onCheckedChange?:(checked:boolean)=>void
+interface PinPros extends React.ComponentProps<typeof Rate> {
+  checked: boolean
+  onCheckedChange?: (checked: boolean) => void
 }
 
-export const Pin = (props:PinPros)=>{
-  const {checked , onCheckedChange,...otherProps} = props
+export const Pin = (props: PinPros) => {
+  const { checked, onCheckedChange, ...otherProps } = props
   return (
     <Rate count={1} value={checked ? 1 : 0}
-      onChange={num=>onCheckedChange?.(!!num)}
+      onChange={num => onCheckedChange?.(!!num)}
       {...otherProps}
-    /> 
+    />
   )
 }
 
 
 //类型守卫
-const isError = (value:any):value is Error=>value?.message
-export const ShowError = ( {error}:{error:unknown} )=>{
+const isError = (value: any): value is Error => value?.message
+export const ShowError = ({ error }: { error: unknown }) => {
   if (isError(error)) {
     return <Typography.Text type='danger'>{error.message}</Typography.Text>
   }
@@ -122,23 +122,23 @@ export const PageContainer = styled.div`
 `
 
 
-export const Mark = ({target,keyword,color}:{target:string , keyword?:string,color?:string})=>{
+export const Mark = ({ target, keyword, color }: { target: string, keyword?: string, color?: string }) => {
   if (!keyword) return <>{target}</>
   const stringSlices = target.split(keyword)
-   return (<>
-    { 
+  return (<>
+    {
       stringSlices.map(
-        (str,index)=>
-        <span key={index}>
-          {str}
-          {
-            index === stringSlices.length - 1 ? null:
-             (<span style={{color: color || "#4382f7"}}>
-              { keyword }
-            </span>)
-          }
-        </span>
-        )
-      }
+        (str, index) =>
+          <span key={index}>
+            {str}
+            {
+              index === stringSlices.length - 1 ? null :
+                (<span style={{ color: color || "#4382f7" }}>
+                  {keyword}
+                </span>)
+            }
+          </span>
+      )
+    }
   </>)
 }

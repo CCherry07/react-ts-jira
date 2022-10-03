@@ -1,15 +1,15 @@
-export interface paramType{
-  name:string|undefined,
-  personId:number|undefined
+export interface paramType {
+  name: string | undefined,
+  personId: number | undefined
 }
 
-export interface userType{
-  id:number,
-  name:string,
-  token:string
+export interface userType {
+  id: number,
+  name: string,
+  token: string
 }
 
-export interface projectType{
+export interface projectType {
   id: number;
   name: string;
   personId: number;
