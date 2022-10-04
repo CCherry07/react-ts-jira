@@ -5,7 +5,7 @@
  * @param referenceId 参照id
  * @param list 要排序的列表, 比如tasks, kanbans
  */
- export const reorder = ({
+export const reorder = ({
   fromId,
   type,
   referenceId,

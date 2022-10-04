@@ -1,21 +1,21 @@
 
-const isVoid =(value:unknown)=>value === (undefined || null || "") ? true :false
-export const clearObject=(target:{ [key:string]:any })=>{
-    const resObj = {...target}
-    Object.keys(resObj).forEach((key:string)=>{
-      if (isVoid(resObj[key])) {
-          delete resObj[key]
-      }
-    })
-    return resObj
+const isVoid = (value: unknown) => value === (undefined || null || "") ? true : false
+export const clearObject = (target: { [key: string]: any }) => {
+  const resObj = { ...target }
+  Object.keys(resObj).forEach((key: string) => {
+    if (isVoid(resObj[key])) {
+      delete resObj[key]
+    }
+  })
+  return resObj
 }
 
-export const resetRouter = ()=>{
+export const resetRouter = () => {
   window.location.href = window.location.origin
 }
 
 export const subset = <
-  O extends Record<string,unknown>,
+  O extends Record<string, unknown>,
   K extends keyof O
 >(
   obj: O,
