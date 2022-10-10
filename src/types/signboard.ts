@@ -1,5 +1,5 @@
-export interface Signboard{
-  id:number
-  name:string
-  projectId:number
+export interface Signboard {
+  id: number
+  name: string
+  projectId: number
 }
