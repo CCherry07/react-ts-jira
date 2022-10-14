@@ -51,7 +51,6 @@ export const PullpageError = ({ error }: { error: Error | null }) => (
 type SelectProps = React.ComponentProps<typeof Select>
 
 interface IdSelectType extends Omit<SelectProps, "value" | "onChange" | "defaultOptionsName" | "options"> {
-
   value?: string | number | null | undefined
   onChange?: (value?: number | string) => void
   defaultOptionName?: string
@@ -67,9 +66,9 @@ export const IdSelect = (props: IdSelectType) => {
       onChange={(value) => onChange?.(toNumber(value) || undefined)}
       {...restProps}
     >
-      {defaultOptionName ? (
+      {defaultOptionName && (
         <Select.Option value={0}>{defaultOptionName}</Select.Option>
-      ) : null}
+      )}
       {options?.map((option) => (
         <Select.Option key={option.id} value={option.id}>
           {option.name}
