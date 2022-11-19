@@ -11,7 +11,7 @@ export const Drop = ({ children, ...props }: Dropprops) => {
               ...provided.droppableProps,
               ref: provided.innerRef,
               provided
-            })
+            } as any)
         }
         return (<div></div>)
       }
@@ -38,7 +38,7 @@ export const Drag = ({ children, ...props }: DragProps) => {
             ...provided.dragHandleProps,
             ...provided.draggableProps,
             ref: provided.innerRef
-          })
+          } as any)
         }
         return <div></div>
       }
