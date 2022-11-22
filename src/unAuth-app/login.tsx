@@ -16,7 +16,7 @@ export const LoginPage = ({ onError }: { onError: (error: Error) => void }) => {
       <Form.Item name={"password"} rules={[{ required: true, message: "请输入密码" }]}>
         <Input placeholder='请输入密码...' type="password" id="password" />
       </Form.Item>
-      <LongButton loading={isLoading} htmlType="submit" type="primary">登陆</LongButton>
+      <LongButton loading={isLoading} htmlType="submit" type="primary">login</LongButton>
     </Form>
   )
 }
