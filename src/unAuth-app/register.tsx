@@ -27,7 +27,7 @@ export const RegisterPage = ({ onError }: { onError: (error: Error) => void }) =
       <Form.Item name={"Cpassword"} rules={[{ required: true, message: "请确认密码" }]}>
         <Input placeholder='请确认密码' type="password" id="Cpassword" />
       </Form.Item>
-      <LongButton loading={isLoading} htmlType="submit" type="primary">注册</LongButton>
+      <LongButton loading={isLoading} htmlType="submit" type="primary">register</LongButton>
     </Form>
   )
 }
