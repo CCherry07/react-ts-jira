@@ -1,13 +1,14 @@
 import { useAuth } from '../context/auth-context'
 import { Form, Input } from 'antd'
 import { LongButton } from '.'
-import { useAsync } from '../hooks'
+import { useAsync, useDocTitle } from '../hooks'
 export const LoginPage = ({ onError }: { onError: (error: Error) => void }) => {
   const { login } = useAuth()
   const { run, isLoading } = useAsync(undefined, { processErrorBySelf: true })
   const handleSubmit = async (value: { username: string, password: string }) => {
     run(login(value)).catch(onError)
   }
+  useDocTitle('login',false)
   return (
     <Form style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} onFinish={handleSubmit}>
       <Form.Item name={"username"} rules={[{ required: true, message: "请输入用户名" }]}>

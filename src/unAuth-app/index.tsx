@@ -12,7 +12,7 @@ import { useDocTitle } from '../hooks';
 export default function UnAuthApp() {
   const [isRegister, setRegister] = useState(false)
   const [error, setError] = useState<Error | null>(null)
-  useDocTitle("欢迎jira", false)
+  useDocTitle("欢迎来到jira", false)
   return (
     <Container>
       <Header></Header>

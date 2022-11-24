@@ -3,9 +3,10 @@ import { Form, Input } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { LongButton } from './index'
 
-import { useAsync } from '../hooks'
+import { useAsync, useDocTitle } from '../hooks'
 export const RegisterPage = ({ onError }: { onError: (error: Error) => void }) => {
   const { register } = useAuth()
+  useDocTitle('register', false)
   const { run, isLoading } = useAsync(undefined, { processErrorBySelf: true })
   const [form] = useForm()
   const handleSubmit = async (value: { username: string, password: string, Cpassword: string }) => {
