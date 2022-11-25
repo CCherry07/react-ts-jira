@@ -11,7 +11,6 @@ import { resetRouter } from "./utils";
 import { PageProjectModal } from "./pages/project-modal";
 import { ProjectPopover, UserPopover } from "./pages/components";
 
-
 export default function AuthApp() {
   useDocTitle("项目列表", false)
   return (
@@ -42,7 +41,6 @@ const PageHeader = () => {
         <ProjectPopover></ProjectPopover>
         <UserPopover></UserPopover>
         <h3> CHERRY </h3>
-        <h3> LOVE </h3>
       </Row>
       <HeaderRight>
         <Dropdown overlay={<Menu>
