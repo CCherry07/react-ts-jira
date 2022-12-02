@@ -48,9 +48,9 @@ const PageHeader = () => {
             <Button onClick={loginOut}>登出</Button>
           </Menu.Item>
         </Menu>}>
-          <a onClick={e => e.preventDefault()}>
+          <div onClick={e => e.preventDefault()}>
             Hi,{user?.name}
-          </a>
+          </div>
         </Dropdown>
       </HeaderRight>
     </Header>
