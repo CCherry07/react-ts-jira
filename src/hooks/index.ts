@@ -8,6 +8,7 @@ import { paramType, projectType, userType } from "../pages/project-list/type"
 export const useMount = (cb: () => void) => {
   useEffect(() => {
     cb()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
 
@@ -44,16 +45,16 @@ export const useAsync = <D>(initState?: State<D>, initConfig?: typeof defaultCon
     ...initState
   })
   const [retry, setReTry] = useState(() => () => { })
-  const setData = (data: D) => setState({
+  const setData = useCallback((data: D) => setState({
     data,
     status: "success",
     error: null
-  })
-  const setError = (error: Error) => setState({
+  }), [])
+  const setError = useCallback((error: Error) => setState({
     data: null,
     status: "error",
     error
-  })
+  }), [])
   const muntedRef = useMuntedRef()
 
   const run = useCallback((promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
@@ -76,7 +77,7 @@ export const useAsync = <D>(initState?: State<D>, initConfig?: typeof defaultCon
       if (config.processErrorBySelf) return Promise.reject(error)
       return error
     }))
-  }, [muntedRef, retry, setData, setError, state])
+  }, [config.processErrorBySelf, muntedRef, setData, setError, state])
   return {
     isIdle: state.status === "idle",
     isLoading: state.status === "loading",
@@ -101,10 +102,10 @@ export const useData = <T>(parameter: useDataParamType) => {
   const { run, ...result } = useAsync<T>()
   const [restData, setrestData] = useState(false)
   const http = useHttp()
-  let retry = () => http(`${parameter.remainingUrl}`, { data: queryOptions, ...config })
+  let retry = useCallback(() => http(`${parameter.remainingUrl}`, { data: queryOptions, ...config }), [config, http, parameter.remainingUrl, queryOptions])
   useEffect(() => {
     run(retry(), { retry })
-  }, [parameter.queryOptions])
+  }, [parameter.queryOptions, retry, run])
   return {
     ...result,
     restData,
