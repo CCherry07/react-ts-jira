@@ -15,6 +15,7 @@
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^18.0.3",
     "all": "^0.0.0",
+    "antd": "^5.0.4",
     "axios": "^0.27.2",
     "craco-less": "^2.0.0",
     "dayjs": "^1.11.2",
@@ -35,8 +36,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "predeploy":"pnpm run build",
-    "deploy":"gh-pages -d build -r git@github.com:CCherry07/CCherry07.github.io.git -b main"
+    "predeploy": "pnpm run build",
+    "deploy": "gh-pages -d build -r git@github.com:CCherry07/CCherry07.github.io.git -b main"
   },
   "eslintConfig": {
     "extends": [
